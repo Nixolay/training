@@ -18,7 +18,11 @@
   rev: HEAD
   hooks:
     - id: black
-- repo: https://gitlab.com/pycqa/flake8
+- repo: https://github.com/pre-commit/mirrors-pylint
   rev: HEAD
   hooks:
-    - id: flake8
+    - id: pylint
+# - repo: https://gitlab.com/pycqa/flake8
+#   rev: HEAD
+#   hooks:
+#     - id: flake8
