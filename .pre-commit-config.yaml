@@ -1,22 +1,24 @@
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: "v2.5.0"
+  rev: HEAD
   hooks:
     - id: check-merge-conflict
     - id: debug-statements
+    - id: no-commit-to-branch
+      args:
+        [
+          "--pattern",
+          "master",
+          "--pattern",
+          "release/.*",
+          "--pattern",
+          "develop/.*",
+        ]
 
-- repo: local
-
+- repo: https://github.com/ambv/black
+  rev: HEAD
   hooks:
     - id: black
-      name: black
-      entry: black
-      language: system
-      types: [python]
-      args: [--line-length=200, --target-version=py37]
-
-    - id: autoflake
-      name: autoflake
-      entry: autoflake
-      language: system
-      types: [python]
-      args: [--in-place, --remove-all-unused-imports, --remove-duplicate-keys]
+- repo: https://gitlab.com/pycqa/flake8
+  rev: HEAD
+  hooks:
+    - id: flake8
