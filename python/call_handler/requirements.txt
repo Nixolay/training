@@ -1,0 +1,4 @@
+pytest
+psycopg2-binary
+tinkoff-voicekit-client
+soundfile
