@@ -1,10 +1,15 @@
 **/.idea/
 .idea/
+**/.vscode/
+.vscode/
 **/.pytest_cache/
 **/__pycache__/
+**/migrations/
 
 *.csv
 *.log
+
+*.sql*
 
 *.wav
 *.mp3
