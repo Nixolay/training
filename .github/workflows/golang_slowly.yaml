@@ -33,10 +33,10 @@ jobs:
 
     - name: Build
       run: |
-        pwd
+        cd golang/slowly
         go build -v .
 
     - name: Test
       run: |
-        pwd
+        cd golang/slowly
         go test -v .
