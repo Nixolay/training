@@ -23,7 +23,7 @@ jobs:
 
     - name: Get dependencies
       run: |
-        cd golang/slowly
+        cd ./golang/slowly
         pwd
         go get all
         if [ -f Gopkg.toml ]; then
@@ -33,10 +33,11 @@ jobs:
 
     - name: Build
       run: |
-        cd golang/slowly
+        cd ./golang/slowly
+        pwd
         go build -v .
 
     - name: Test
       run: |
-        cd golang/slowly
+        cd ./golang/slowly
         go test -v .
