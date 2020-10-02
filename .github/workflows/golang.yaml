@@ -1,9 +1,7 @@
 name: golang
 
 on:
-  push:
-    branches:
-      - *
+  pull_request:
     branches-ignore:
       - master
 
