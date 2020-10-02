@@ -1,9 +1,9 @@
-name: slowly
+name: golang
 
 on:
   push:
     branches:
-      - feature/golang_slowly
+      - "*"
 
 jobs:
   build:
