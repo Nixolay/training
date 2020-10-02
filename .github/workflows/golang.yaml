@@ -3,7 +3,9 @@ name: golang
 on:
   push:
     branches:
-      - "*"
+      - *
+    branches-ignore:
+      - master
 
 jobs:
   build:
