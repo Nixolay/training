@@ -1,5 +1,7 @@
 package main
 
+import "log"
+
 func main() {
-	RunServer(":8080")
+	log.Print(RunServer(":8080"))
 }

@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -30,7 +31,7 @@ func handlers() http.Handler {
 	return r
 }
 
-// handle request
+// slow handle request
 func slow(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
@@ -69,8 +70,12 @@ func middlewareSlow(next http.Handler) http.Handler {
 	})
 }
 
+var mu = sync.Mutex{}
+
 // sendRequest prepares and sends a message
 func sendResponse(w http.ResponseWriter, msg message, status int) {
+	mu.Lock()
+	defer mu.Unlock()
 	if w.Header().Get("Content-Type") != "" {
 		return
 	}
@@ -83,7 +88,6 @@ func sendResponse(w http.ResponseWriter, msg message, status int) {
 	// write status and content type in response
 	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/json")
-
 	if _, err := w.Write(body); err != nil {
 		log.Print(err)
 	}
