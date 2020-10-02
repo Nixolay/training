@@ -1,9 +1,9 @@
 name: golang
 
 on:
-  pull_request:
-    branches-ignore:
-      - master
+  push:
+    branches:
+      - "feature/**"
 
 jobs:
   build:
