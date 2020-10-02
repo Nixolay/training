@@ -8,7 +8,6 @@ import (
 
 func TestIPValidator(t *testing.T) {
 	Convey("should test correct", t, valid(IsValidIP))
-	Convey("should test correct", t, valid(Is_valid_ip))
 }
 
 func valid(f func(string) bool) func() {

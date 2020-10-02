@@ -1,7 +1,6 @@
 package ipvalidator
 
 import (
-	"net"
 	"strconv"
 	"strings"
 )
@@ -26,15 +25,6 @@ func IsValidIP(ip string) bool {
 		if v[0] == '0' {
 			return false
 		}
-	}
-
-	return true
-}
-
-// nolint
-func Is_valid_ip(ip string) bool {
-	if net.ParseIP(ip) == nil {
-		return false
 	}
 
 	return true
