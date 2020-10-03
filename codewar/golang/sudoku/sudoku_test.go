@@ -6,9 +6,9 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestSudoku(t *testing.T){
+func TestSudoku(t *testing.T) {
 	Convey("should test that the solution returns the correct value", t, func() {
-		So(ValidateSolution(testTrue),ShouldBeTrue)
+		So(ValidateSolution(testTrue), ShouldBeTrue)
 		So(ValidateSolution(testFalse), ShouldBeFalse)
 		So(ValidateSolution(testFalse2), ShouldBeFalse)
 	})
