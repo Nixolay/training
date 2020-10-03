@@ -1,4 +1,4 @@
-package thirt
+package thirt //nolint:testpackage
 
 import (
 	"testing"
@@ -17,7 +17,7 @@ func TestThirt(t *testing.T) {
 }
 
 func testequal(n int, exp int) {
-	var ans = Thirt(n)
+	ans := Thirt(n)
 
 	So(ans, ShouldEqual, exp)
 }

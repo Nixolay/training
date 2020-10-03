@@ -14,6 +14,7 @@ func HighAndLow(in string) string {
 
 		if i == 0 {
 			low, big = number, number
+
 			continue
 		}
 

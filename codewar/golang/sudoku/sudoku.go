@@ -27,12 +27,15 @@ import (
 )
 
 func ValidateSolution(m [][]int) bool {
+	const expected = "[1 2 3 4 5 6 7 8 9]"
+
 	for i := range m {
 		data := make([]int, 9)
 		copy(data, m[i])
 
 		sort.Ints(data)
-		if fmt.Sprint(data) != "[1 2 3 4 5 6 7 8 9]" {
+
+		if fmt.Sprint(data) != expected {
 			return false
 		}
 
@@ -41,7 +44,8 @@ func ValidateSolution(m [][]int) bool {
 		}
 
 		sort.Ints(data)
-		if fmt.Sprint(data) != "[1 2 3 4 5 6 7 8 9]" {
+
+		if fmt.Sprint(data) != expected {
 			return false
 		}
 	}
@@ -53,7 +57,8 @@ func ValidateSolution(m [][]int) bool {
 			data = append(data, m[i+2][j:j+3]...)
 
 			sort.Ints(data)
-			if fmt.Sprint(data) != "[1 2 3 4 5 6 7 8 9]" {
+
+			if fmt.Sprint(data) != expected {
 				return false
 			}
 		}

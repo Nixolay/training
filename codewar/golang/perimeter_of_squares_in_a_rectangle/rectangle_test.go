@@ -1,5 +1,5 @@
 //https://www.codewars.com/kata/559a28007caad2ac4e000083/train/go
-package rectangle
+package rectangle //nolint:testpackage
 
 import (
 	"testing"
@@ -18,7 +18,7 @@ func TestPerimeter(t *testing.T) {
 }
 
 func dotest(n, exp int) {
-	var ans = Perimeter(n)
+	ans := Perimeter(n)
 
 	So(ans, ShouldEqual, exp)
 }

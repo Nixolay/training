@@ -11,7 +11,7 @@
 
 Пример:
 */
-package romandecoder
+package romandecoder //nolint:testpackage
 
 import (
 	"testing"

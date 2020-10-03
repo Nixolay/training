@@ -1,4 +1,4 @@
-package main
+package main //nolint:testpackage
 
 import (
 	"bytes"
@@ -12,32 +12,52 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+// nolint:gosec,noctx
 func Test_slow(t *testing.T) {
 	srv := httptest.NewServer(handlers())
 	defer srv.Close()
 
-	contentType := "application/json"
-	apiURL := fmt.Sprintf("%s/api/slow", srv.URL)
+	const contentType = "application/json"
+
+	var apiURL string = srv.URL + "/api/slow"
 
 	Convey("Test API", t, func() {
 		Convey("Checking url availability", func() {
 			res, err := http.Post(apiURL, contentType, nil)
+			res.Body.Close()
+
 			So(err, ShouldBeNil)
 			So(res.StatusCode, ShouldNotEqual, 404)
 		})
 
 		Convey("Invalid request type", func() {
 			res, err := http.Get(apiURL)
+			res.Body.Close()
+
 			So(err, ShouldBeNil)
 			So(res.StatusCode, ShouldEqual, 404)
 		})
 
 		Convey("Bad URL", func() {
-			res, err := http.Get(fmt.Sprintf("%s/slow", srv.URL))
+			res, err := http.Get(fmt.Sprintf("%s/slow", srv.URL)) //nolint:noctx
+			res.Body.Close()
+
 			So(err, ShouldBeNil)
 			So(res.StatusCode, ShouldEqual, 404)
 		})
+	})
+}
 
+// nolint:gosec,noctx
+func TestTimouts_slow(t *testing.T) {
+	srv := httptest.NewServer(handlers())
+	defer srv.Close()
+
+	const contentType = "application/json"
+
+	var apiURL string = srv.URL + "/api/slow"
+
+	Convey("Test timeouts", t, func() {
 		Convey("Send timeout", func() {
 			buffer := bytes.NewBufferString(`{"timeout": 3000}`)
 			expected := `{"status":"ok"}`

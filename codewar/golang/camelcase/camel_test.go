@@ -1,4 +1,4 @@
-package camel
+package camel //nolint:testpackage
 
 import (
 	"testing"
@@ -13,6 +13,7 @@ func TestToCamelCase(t *testing.T) {
 		dotest("the-Stealth-Warrior", "theStealthWarrior")
 	})
 }
+
 func dotest(str, exp string) {
 	println("input:", str)
 

@@ -16,7 +16,7 @@ func Thirt(n int) int {
 	return tempPrevResult
 }
 
-// function that is used for recursive calls
+// function that is used for recursive calls.
 func recursiveCalculation(n int) int {
 	numbers := [6]int{1, 10, 9, 12, 3, 4}
 	numberAsString := strconv.Itoa(n)

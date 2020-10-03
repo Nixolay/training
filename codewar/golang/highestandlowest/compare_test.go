@@ -1,4 +1,4 @@
-package compare
+package compare //nolint:testpackage
 
 import (
 	"testing"

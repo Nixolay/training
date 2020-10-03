@@ -1,4 +1,4 @@
-package number
+package number //nolint:testpackage
 
 import (
 	"testing"

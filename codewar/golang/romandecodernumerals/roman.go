@@ -1,4 +1,4 @@
-package romandecoder
+package romandecoder //nolint:testpackage
 
 //nolint
 func Decode(roman string) int {

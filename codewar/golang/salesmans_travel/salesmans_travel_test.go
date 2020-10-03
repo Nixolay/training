@@ -1,4 +1,4 @@
-package salesmans
+package salesmans //nolint:testpackage
 
 import (
 	"testing"

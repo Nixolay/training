@@ -1,4 +1,4 @@
-package validbraces
+package validbraces //nolint:testpackage
 
 import (
 	"fmt"
