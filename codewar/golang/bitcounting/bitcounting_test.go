@@ -1,4 +1,4 @@
-package bitcounting
+package bitcounting //nolint:testpackage
 
 import (
 	"testing"

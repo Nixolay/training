@@ -17,6 +17,7 @@ func ToCamelCase(phrase string) string {
 	for _, letter := range phrase {
 		if !unicode.IsLetter(letter) {
 			up = true
+
 			continue
 		}
 

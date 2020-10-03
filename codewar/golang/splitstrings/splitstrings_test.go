@@ -1,4 +1,4 @@
-package splitstrings
+package splitstrings //nolint:testpackage
 
 import (
 	"testing"

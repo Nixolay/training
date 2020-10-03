@@ -1,4 +1,4 @@
-package multiples
+package multiples //nolint:testpackage
 
 import (
 	"testing"

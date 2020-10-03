@@ -1,4 +1,4 @@
-package alphanumeric
+package alphanumeric //nolint:testpackage
 
 import (
 	"testing"

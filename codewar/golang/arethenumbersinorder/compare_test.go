@@ -1,4 +1,4 @@
-package inascorder
+package inascorder //nolint:testpackage
 
 import (
 	"testing"

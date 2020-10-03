@@ -27,31 +27,38 @@ import (
 )
 
 func ValidateSolution(m [][]int) bool {
+	const expected = "[1 2 3 4 5 6 7 8 9]"
+
 	for i := range m {
-		data := append([]int{},m[i]...)
-		sort.Sort(sort.IntSlice(data))
-		if fmt.Sprint(data) != "[1 2 3 4 5 6 7 8 9]"{
+		data := make([]int, 9)
+		copy(data, m[i])
+
+		sort.Ints(data)
+
+		if fmt.Sprint(data) != expected {
 			return false
 		}
 
-		for j:=0 ; j < 9 ; j++ {
+		for j := 0; j < 9; j++ {
 			data[j] = m[j][i]
 		}
 
-		sort.Sort(sort.IntSlice(data))
-		if fmt.Sprint(data) != "[1 2 3 4 5 6 7 8 9]"{
+		sort.Ints(data)
+
+		if fmt.Sprint(data) != expected {
 			return false
 		}
 	}
 
-	for i := 0 ; i < 9 ; i+=3 {
-		for j := 0 ; j < 9  ; j += 3 {
+	for i := 0; i < 9; i += 3 {
+		for j := 0; j < 9; j += 3 {
 			data := append([]int{}, m[i][j:j+3]...)
 			data = append(data, m[i+1][j:j+3]...)
 			data = append(data, m[i+2][j:j+3]...)
-	
-			sort.Sort(sort.IntSlice(data))
-			if fmt.Sprint(data) != "[1 2 3 4 5 6 7 8 9]"{
+
+			sort.Ints(data)
+
+			if fmt.Sprint(data) != expected {
 				return false
 			}
 		}

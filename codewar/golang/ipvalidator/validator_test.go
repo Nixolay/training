@@ -1,4 +1,4 @@
-package ipvalidator
+package ipvalidator //nolint:testpackage
 
 import (
 	"testing"

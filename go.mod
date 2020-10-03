@@ -1,4 +1,4 @@
-module github.com/Nixolay/training/golang/slowly
+module github.com/Nixolay/training
 
 go 1.15
 

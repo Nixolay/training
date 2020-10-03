@@ -10,6 +10,7 @@
 	spinWords( "This is a test") => returns "This is a test"
 	spinWords( "This is another test" )=> returns "This is rehtona test"
 */
+
 package stopgninnips
 
 import "strings"
@@ -17,19 +18,22 @@ import "strings"
 func SpinWords(str string) string {
 	words := strings.Split(str, " ")
 
-  for i, word := range words {
-    if len([]rune(word)) > 4 {
-      words[i] = reverse(word)
-    }
+	const maxLen = 4
+
+	for i, word := range words {
+		if len([]rune(word)) > maxLen {
+			words[i] = reverse(word)
+		}
 	}
-	
-  return strings.Join(words, " ")
+
+	return strings.Join(words, " ")
 }
 
 func reverse(s string) string {
 	runes := []rune(s)
 	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
-			runes[i], runes[j] = runes[j], runes[i]
+		runes[i], runes[j] = runes[j], runes[i]
 	}
+
 	return string(runes)
 }
