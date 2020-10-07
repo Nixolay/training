@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"sync"
 	"time"
 )
 
@@ -39,13 +38,17 @@ func slow(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusNotFound)
 
+		if _, err := w.Write([]byte(http.StatusText(http.StatusNotFound))); err != nil {
+			log.Println(err)
+		}
+
 		return
 	}
 
 	// reading request body
 	content, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 	}
 
 	// reading message
@@ -56,44 +59,14 @@ func slow(w http.ResponseWriter, r *http.Request) {
 
 	time.Sleep(msg.Timeout * time.Millisecond)
 
-	sendResponse(w, message{Status: "ok"}, http.StatusOK)
-}
-
-// middlewareSlow if the request takes a long time to process, it sends an error.
-func middlewareSlow(next http.Handler) http.Handler {
-	const timeSleep = 5
-
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == pathSlow {
-			go next.ServeHTTP(w, r)
-
-			time.Sleep(timeSleep * time.Second)
-			sendResponse(w, message{Error: "timeout too long"}, http.StatusBadRequest)
-		}
-	})
-}
-
-var mu = sync.Mutex{} //nolint:gochecknoglobals
-
-// sendRequest prepares and sends a message.
-func sendResponse(w http.ResponseWriter, msg message, status int) {
-	mu.Lock()
-	defer mu.Unlock()
-
-	if w.Header().Get("Content-Type") != "" {
-		return
-	}
-
-	body, err := json.Marshal(msg)
+	bodyResponse, err := json.Marshal(message{Status: "ok"})
 	if err != nil {
-		log.Print(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 
-	// write status and content type in response
-	w.WriteHeader(status)
-	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 
-	if _, err := w.Write(body); err != nil {
-		log.Print(err)
+	if _, err := w.Write(bodyResponse); err != nil {
+		log.Println(err)
 	}
 }

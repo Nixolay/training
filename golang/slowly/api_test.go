@@ -64,7 +64,7 @@ func TestTimouts_slow(t *testing.T) {
 
 			res, err := http.Post(apiURL, contentType, buffer)
 			So(err, ShouldBeNil)
-			So(res.StatusCode, ShouldEqual, 200)
+			So(res.StatusCode, ShouldEqual, http.StatusOK)
 
 			body, err := ioutil.ReadAll(res.Body)
 			So(err, ShouldBeNil)
@@ -77,12 +77,13 @@ func TestTimouts_slow(t *testing.T) {
 		Convey("Send timeout too long", func() {
 			buffer := bytes.NewBufferString(fmt.Sprintf(
 				"{\"timeout\": %d}",
-				(time.Minute*6)/time.Millisecond))
+				(time.Minute*5)/time.Millisecond))
 			expected := `{"error":"timeout too long"}`
 
 			res, err := http.Post(apiURL, contentType, buffer)
 			So(err, ShouldBeNil)
 			So(res.StatusCode, ShouldEqual, 400)
+			So(res.Header.Get("Content-Type"), ShouldEqual, "application/json")
 
 			defer res.Body.Close()
 
