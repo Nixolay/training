@@ -24,6 +24,10 @@ jobs:
         with:
           args: "--enable-all"
 
+      - uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+
       - name: Get dependencies
         run: |
           go get github.com/smartystreets/goconvey
