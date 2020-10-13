@@ -1,9 +1,0 @@
-runner:
-  golangci: &runner-config
-    cmd: golangci-lint run --enable-all --out-format=line-number ./codewar/golang/... ; golangci-lint run --enable-all --out-format=line-number ./golang/...
-    errorformat:
-      - "%E%f:%l:%c: %m"
-      - "%E%f:%l: %m"
-      - "%C%.%#"
-  golangci-branch: *runner-config
-  golangci-pr: *runner-config
