@@ -1,8 +1,9 @@
-package multiples //nolint:testpackage
+package multiples_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/multiples_of_3_or_5"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

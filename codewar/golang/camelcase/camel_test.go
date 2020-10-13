@@ -1,8 +1,9 @@
-package camel //nolint:testpackage
+package camel_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/camelcase"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

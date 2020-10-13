@@ -1,8 +1,9 @@
-package inascorder //nolint:testpackage
+package inascorder_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/arethenumbersinorder"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

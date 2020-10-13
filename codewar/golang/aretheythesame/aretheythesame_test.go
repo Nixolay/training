@@ -1,8 +1,9 @@
-package aretheythesame //nolint:testpackage
+package aretheythesame_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/aretheythesame"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

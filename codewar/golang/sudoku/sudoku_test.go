@@ -1,8 +1,9 @@
-package sudoku //nolint:testpackage
+package sudoku_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/sudoku"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

@@ -1,4 +1,4 @@
-package main //nolint:testpackage
+package main_test
 
 import (
 	"bytes"
@@ -9,12 +9,13 @@ import (
 	"testing"
 	"time"
 
+	. "github.com/Nixolay/training/golang/slowly"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 // nolint:gosec,noctx
 func Test_slow(t *testing.T) {
-	srv := httptest.NewServer(handlers())
+	srv := httptest.NewServer(GetHandlers())
 	defer srv.Close()
 
 	const contentType = "application/json"
@@ -50,7 +51,7 @@ func Test_slow(t *testing.T) {
 
 // nolint:gosec,noctx
 func TestTimouts_slow(t *testing.T) {
-	srv := httptest.NewServer(handlers())
+	srv := httptest.NewServer(GetHandlers())
 	defer srv.Close()
 
 	const contentType = "application/json"

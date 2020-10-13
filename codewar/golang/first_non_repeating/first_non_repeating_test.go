@@ -1,8 +1,9 @@
-package repair //nolint:testpackage
+package repair_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/first_non_repeating"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

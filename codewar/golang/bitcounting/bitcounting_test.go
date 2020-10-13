@@ -1,8 +1,9 @@
-package bitcounting //nolint:testpackage
+package bitcounting_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/bitcounting"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

@@ -1,8 +1,9 @@
-package splitstrings //nolint:testpackage
+package splitstrings_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/splitstrings"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

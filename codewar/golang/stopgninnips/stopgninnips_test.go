@@ -1,8 +1,9 @@
-package stopgninnips //nolint:testpackage
+package stopgninnips_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/stopgninnips"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

@@ -15,6 +15,6 @@ import (
 	"regexp"
 )
 
-func alphanumeric(str string) bool {
+func Alphanumeric(str string) bool {
 	return regexp.MustCompile("^[a-zA-Z0-9]+$").MatchString(str)
 }

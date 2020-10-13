@@ -1,8 +1,9 @@
-package salesmans //nolint:testpackage
+package salesmans_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/salesmans_travel"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

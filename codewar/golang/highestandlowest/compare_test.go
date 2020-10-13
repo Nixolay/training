@@ -1,8 +1,9 @@
-package compare //nolint:testpackage
+package compare_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/highestandlowest"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

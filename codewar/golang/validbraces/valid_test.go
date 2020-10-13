@@ -1,9 +1,10 @@
-package validbraces //nolint:testpackage
+package validbraces_test
 
 import (
 	"fmt"
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/validbraces"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

@@ -1,8 +1,9 @@
-package thirt //nolint:testpackage
+package thirt_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/thirt"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
