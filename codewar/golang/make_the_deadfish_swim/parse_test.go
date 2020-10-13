@@ -1,8 +1,9 @@
-package parsefish //nolint:testpackage
+package parsefish_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/make_the_deadfish_swim"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

@@ -1,8 +1,9 @@
-package ipvalidator //nolint:testpackage
+package ipvalidator_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/ipvalidator"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

@@ -11,11 +11,12 @@
 
 Пример:
 */
-package romandecoder //nolint:testpackage
+package romandecoder_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/romandecodernumerals"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

@@ -1,8 +1,9 @@
-package romandecoder //nolint:testpackage
+package romandecoder
 
-//nolint
+//nolint:gomnd
 func Decode(roman string) int {
 	println(roman)
+
 	var (
 		out       int
 		past      int

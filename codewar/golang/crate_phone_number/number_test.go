@@ -1,8 +1,9 @@
-package number //nolint:testpackage
+package number_test
 
 import (
 	"testing"
 
+	. "github.com/Nixolay/training/codewar/golang/crate_phone_number"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

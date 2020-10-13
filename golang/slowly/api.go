@@ -17,11 +17,11 @@ type message struct {
 }
 
 func RunServer(addr string) error {
-	return http.ListenAndServe(addr, handlers())
+	return http.ListenAndServe(addr, GetHandlers())
 }
 
 // handlers returns prepared handlers.
-func handlers() http.Handler {
+func GetHandlers() http.Handler {
 	r := http.NewServeMux()
 
 	slowHandler := http.HandlerFunc(slow)
