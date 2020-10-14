@@ -13,7 +13,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-// nolint:gosec,noctx
+// nolint:gosec
 func Test_slow(t *testing.T) {
 	srv := httptest.NewServer(GetHandlers())
 	defer srv.Close()
