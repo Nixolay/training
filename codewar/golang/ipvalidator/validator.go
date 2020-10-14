@@ -1,3 +1,4 @@
+// Package ipvalidator checked valid ip
 package ipvalidator
 
 import (
@@ -5,7 +6,8 @@ import (
 	"strings"
 )
 
-//nolint
+//nolint:gomnd
+// IsValidIP checked valid ip.
 func IsValidIP(ip string) bool {
 	numbers, four := strings.Split(ip, "."), 4
 	if len(numbers) < four {

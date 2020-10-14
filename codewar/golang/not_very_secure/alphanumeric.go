@@ -1,5 +1,5 @@
 /*
-В этом примере вы должны проверить, является ли строка
+Package alphanumeric В этом примере вы должны проверить, является ли строка
 ввода пользователя буквенно-цифровой. Данная строка не
 nil/null/NULL/None, поэтому вам не нужно проверять это.
 
@@ -15,6 +15,7 @@ import (
 	"regexp"
 )
 
+// Alphanumeric checked.
 func Alphanumeric(str string) bool {
 	return regexp.MustCompile("^[a-zA-Z0-9]+$").MatchString(str)
 }

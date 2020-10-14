@@ -1,9 +1,6 @@
 name: golang
 
-on:
-  push:
-    branches:
-      - "feature/**"
+on: [pull_request]
 
 jobs:
   build:
@@ -18,6 +15,14 @@ jobs:
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
+
+      - name: golangci-lint
+        uses: reviewdog/action-golangci-lint@v1
+        with:
+          golangci_lint_flags: "--enable-all --exclude-use-default=false ./..."
+          reporter: github-pr-check
+          filter_mode: nofilter
+          fail_on_error: true
 
       - name: Get dependencies
         run: |

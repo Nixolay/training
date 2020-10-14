@@ -1,6 +1,8 @@
+// Package romandecoder ...
 package romandecoder
 
 //nolint:gomnd
+// Decode ...
 func Decode(roman string) int {
 	println(roman)
 

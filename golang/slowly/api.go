@@ -8,7 +8,10 @@ import (
 	"time"
 )
 
-const pathSlow = "/api/slow"
+const (
+	timeoutSeconds = 5
+	pathSlow       = "/api/slow"
+)
 
 type message struct {
 	Timeout time.Duration `json:"timeout,omitempty"`
@@ -16,23 +19,33 @@ type message struct {
 	Error   string        `json:"error,omitempty"`
 }
 
+// RunServer starts the server.
 func RunServer(addr string) error {
 	return http.ListenAndServe(addr, GetHandlers())
 }
 
-// handlers returns prepared handlers.
+// GetHandlers returns prepared handlers.
 func GetHandlers() http.Handler {
 	r := http.NewServeMux()
 
 	slowHandler := http.HandlerFunc(slow)
-	r.Handle(pathSlow, middlewareSlow(slowHandler))
+	timeoutHandler := http.TimeoutHandler(
+		slowHandler, timeoutSeconds*time.Second,
+		"timeout too long",
+	)
+
+	r.Handle(pathSlow, timeoutHandler)
 
 	return r
 }
 
 // slow handle request.
 func slow(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
+	defer func() {
+		if err := r.Body.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	// checked the correct method
 	if r.Method != http.MethodPost {
@@ -64,6 +77,7 @@ func slow(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
 	if _, err := w.Write(bodyResponse); err != nil {

@@ -1,9 +1,11 @@
+// Package thirt ...
 package thirt
 
 import (
 	"strconv"
 )
 
+// Thirt ...
 func Thirt(n int) int {
 	// temporare result that is storedand compared with each iteration
 	tempPrevResult := recursiveCalculation(n)
