@@ -1,21 +1,23 @@
+/*Package repair for non repeating.*/
 package repair
 
 import (
 	"strings"
 )
 
-type Data struct {
+type data struct {
 	r               rune
 	position, count int
 }
 
+// FirstNonRepeating non repeat.
 func FirstNonRepeating(str string) string {
-	data := make(map[string]*Data)
+	dt := make(map[string]*data)
 
 	for iterator, r := range str {
-		d, ok := data[strings.ToLower(string(r))]
+		d, ok := dt[strings.ToLower(string(r))]
 		if !ok {
-			data[strings.ToLower(string(r))] = &Data{r: r, position: iterator, count: 1}
+			dt[strings.ToLower(string(r))] = &data{r: r, position: iterator, count: 1}
 		}
 
 		if ok {
@@ -23,9 +25,9 @@ func FirstNonRepeating(str string) string {
 		}
 	}
 
-	position := Data{position: -1}
+	position := data{position: -1}
 
-	for _, d := range data {
+	for _, d := range dt {
 		if d.count > 1 {
 			continue
 		}

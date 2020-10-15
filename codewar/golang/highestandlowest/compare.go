@@ -1,3 +1,4 @@
+// Package compare serching low and big number.
 package compare
 
 import (
@@ -6,6 +7,7 @@ import (
 	"strings"
 )
 
+// HighAndLow returning low and big number.
 func HighAndLow(in string) string {
 	low, big := 0, 0
 

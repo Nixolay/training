@@ -1,6 +1,7 @@
+// Package validbraces ...
 package validbraces
 
-//nolint
+// ValidBraces valid braces.
 func ValidBraces(str string) bool {
 	m := map[string]string{
 		"{": "}",
@@ -9,6 +10,7 @@ func ValidBraces(str string) bool {
 	}
 
 	arr := make([]string, 0)
+
 	for _, r := range str {
 		r := string(r)
 		if len(arr) > 0 && m[arr[len(arr)-1]] == r {

@@ -1,5 +1,5 @@
 /*
-Судоку Фон
+Package sudoku Судоку Фон
 
 Судоку - игра, в которую играют по сетке 9х9.
 Цель игры - заполнить все ячейки сетки цифрами от 1 до 9,
@@ -26,6 +26,7 @@ import (
 	"sort"
 )
 
+// ValidateSolution validation solution.
 func ValidateSolution(m [][]int) bool {
 	const expected = "[1 2 3 4 5 6 7 8 9]"
 

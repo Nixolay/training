@@ -13,7 +13,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-// nolint:gosec
+// nolint:gosec,noctx
 func Test_slow(t *testing.T) {
 	srv := httptest.NewServer(GetHandlers())
 	defer srv.Close()
@@ -25,7 +25,9 @@ func Test_slow(t *testing.T) {
 	Convey("Test API", t, func() {
 		Convey("Checking url availability", func() {
 			res, err := http.Post(apiURL, contentType, nil)
-			res.Body.Close()
+			if err := res.Body.Close(); err != nil {
+				t.Fatal(err)
+			}
 
 			So(err, ShouldBeNil)
 			So(res.StatusCode, ShouldNotEqual, 404)
@@ -33,7 +35,9 @@ func Test_slow(t *testing.T) {
 
 		Convey("Invalid request type", func() {
 			res, err := http.Get(apiURL)
-			res.Body.Close()
+			if err := res.Body.Close(); err != nil {
+				t.Fatal(err)
+			}
 
 			So(err, ShouldBeNil)
 			So(res.StatusCode, ShouldEqual, 404)
@@ -41,7 +45,9 @@ func Test_slow(t *testing.T) {
 
 		Convey("Bad URL", func() {
 			res, err := http.Get(fmt.Sprintf("%s/slow", srv.URL)) //nolint:noctx
-			res.Body.Close()
+			if err := res.Body.Close(); err != nil {
+				t.Fatal(err)
+			}
 
 			So(err, ShouldBeNil)
 			So(res.StatusCode, ShouldEqual, 404)
@@ -66,11 +72,16 @@ func TestTimouts_slow(t *testing.T) {
 			res, err := http.Post(apiURL, contentType, buffer)
 			So(err, ShouldBeNil)
 			So(res.StatusCode, ShouldEqual, http.StatusOK)
+			So(res.Header.Get("Content-Type"), ShouldEqual, "application/json")
 
 			body, err := ioutil.ReadAll(res.Body)
 			So(err, ShouldBeNil)
 
-			defer res.Body.Close()
+			defer func() {
+				if err := res.Body.Close(); err != nil {
+					t.Fatal(err)
+				}
+			}()
 
 			So(string(body), ShouldEqual, expected)
 		})
@@ -79,14 +90,17 @@ func TestTimouts_slow(t *testing.T) {
 			buffer := bytes.NewBufferString(fmt.Sprintf(
 				"{\"timeout\": %d}",
 				(time.Minute*5)/time.Millisecond))
-			expected := `{"error":"timeout too long"}`
+			expected := "timeout too long"
 
 			res, err := http.Post(apiURL, contentType, buffer)
 			So(err, ShouldBeNil)
-			So(res.StatusCode, ShouldEqual, 400)
-			So(res.Header.Get("Content-Type"), ShouldEqual, "application/json")
+			So(res.StatusCode, ShouldEqual, 503)
 
-			defer res.Body.Close()
+			defer func() {
+				if err := res.Body.Close(); err != nil {
+					t.Fatal(err)
+				}
+			}()
 
 			body, err := ioutil.ReadAll(res.Body)
 			So(err, ShouldBeNil)

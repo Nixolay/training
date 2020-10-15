@@ -1,3 +1,4 @@
+// Package camel phrase to camel case.
 package camel
 
 import (
@@ -11,6 +12,7 @@ const (
 	down   rune = 97
 )
 
+// ToCamelCase phrase to camel case.
 func ToCamelCase(phrase string) string {
 	buf, up := bytes.Buffer{}, false
 

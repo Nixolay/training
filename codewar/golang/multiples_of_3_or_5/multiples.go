@@ -1,5 +1,7 @@
+// Package multiples numbers calculate.
 package multiples
 
+// Multiple3And5 multiple numbers.
 func Multiple3And5(number int) int {
 	n := 0
 

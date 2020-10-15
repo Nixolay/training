@@ -1,3 +1,4 @@
+/*Package aretheythesame check deep equal.*/
 package aretheythesame
 
 import (
@@ -5,6 +6,7 @@ import (
 	"sort"
 )
 
+// Comp check deep equal.
 func Comp(a, b []int) bool {
 	if a == nil || b == nil {
 		return false

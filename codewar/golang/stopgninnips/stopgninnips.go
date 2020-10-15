@@ -1,20 +1,19 @@
-/*
-	Напишите функцию, которая принимает строку из одного или нескольких
-	слов и возвращает ту же строку, но со всеми пятью или более буквенными
-	словами в обратном порядке (точно так же, как имя этого ката).
-	Переданные строки будут состоять только из букв и пробелов.
-	Пробелы будут включены только при наличии более одного слова.
+/*Package stopgninnips Напишите функцию, которая принимает строку из одного или нескольких
+слов и возвращает ту же строку, но со всеми пятью или более буквенными
+словами в обратном порядке (точно так же, как имя этого ката).
+Переданные строки будут состоять только из букв и пробелов.
+Пробелы будут включены только при наличии более одного слова.
 
-	Examples:
-	spinWords( "Hey fellow warriors" ) => returns "Hey wollef sroirraw"
-	spinWords( "This is a test") => returns "This is a test"
-	spinWords( "This is another test" )=> returns "This is rehtona test"
+Examples:
+spinWords( "Hey fellow warriors" ) => returns "Hey wollef sroirraw"
+spinWords( "This is a test") => returns "This is a test"
+spinWords( "This is another test" )=> returns "This is rehtona test"
 */
-
 package stopgninnips
 
 import "strings"
 
+// SpinWords reverse word.
 func SpinWords(str string) string {
 	words := strings.Split(str, " ")
 

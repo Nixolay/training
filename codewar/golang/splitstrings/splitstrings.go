@@ -1,5 +1,5 @@
 /*
-Complete the solution so that it splits the string into pairs of two characters.
+Package splitstrings Complete the solution so that it splits the string into pairs of two characters.
 If the string contains an odd number of characters then it should replace the
 missing second character of the final pair with an underscore ('_').
 
@@ -11,6 +11,7 @@ package splitstrings
 
 import "regexp"
 
+// Solution ...
 func Solution(str string) []string {
 	if len(str)%2 != 0 {
 		str += "_"
@@ -26,6 +27,7 @@ func Solution(str string) []string {
 	return out
 }
 
+// Solution2 ...
 func Solution2(str string) []string {
 	return regexp.MustCompile(".{2}").FindAllString(str+"_", -1)
 }

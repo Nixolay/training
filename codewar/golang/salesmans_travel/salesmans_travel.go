@@ -1,7 +1,9 @@
+// Package salesmans ...
 package salesmans
 
 import "strings"
 
+// Travel ...
 func Travel(r, zipcode string) string {
 	if zipcode == "" || r == "" {
 		return ":/"

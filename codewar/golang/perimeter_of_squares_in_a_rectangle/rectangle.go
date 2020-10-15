@@ -1,5 +1,7 @@
+// Package rectangle perimeter calculate.
 package rectangle
 
+// Perimeter calculate.
 func Perimeter(n int) int {
 	a, b, sum := 1, 1, 2
 	for n--; n > 0; n-- {
