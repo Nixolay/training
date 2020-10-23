@@ -8,10 +8,6 @@ install-pre-commit:
 windows:
 	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b %GOPATH%\bin
 
-.PHONY: linux
-linux:
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
-
 .PHONY: linters
 linters:
 	golangci-lint run --enable-all --exclude-use-default=false ./codewar/golang/...
