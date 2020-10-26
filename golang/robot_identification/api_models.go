@@ -22,7 +22,7 @@ func (c *count32) get() int32 {
 	return atomic.LoadInt32((*int32)(c))
 }
 
-//nolint:golint
+//nolint:golint,exhaustivestruct
 // CreateUserStorage ...
 func CreateUserStorage(timeout time.Duration) users {
 	return users{m: make(map[string]*count32), timeout: timeout}

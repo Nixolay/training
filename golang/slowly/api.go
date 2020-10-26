@@ -72,7 +72,7 @@ func slow(w http.ResponseWriter, r *http.Request) {
 
 	time.Sleep(msg.Timeout * time.Millisecond)
 
-	bodyResponse, err := json.Marshal(message{Status: "ok"})
+	bodyResponse, err := json.Marshal(message{Status: "ok"}) //nolint:exhaustivestruct
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}

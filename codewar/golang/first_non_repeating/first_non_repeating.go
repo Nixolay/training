@@ -25,7 +25,7 @@ func FirstNonRepeating(str string) string {
 		}
 	}
 
-	position := data{position: -1}
+	position := data{position: -1, r: 0, count: 0}
 
 	for _, d := range dt {
 		if d.count > 1 {
