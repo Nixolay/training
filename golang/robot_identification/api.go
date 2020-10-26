@@ -14,7 +14,7 @@ var userStorage = CreateUserStorage(time.Minute) //nolint:gochecknoglobals
 
 // RunServer Server API launch.
 func RunServer() {
-	httpServer := http.Server{Addr: ":8080"}
+	httpServer := http.Server{Addr: ":8080"} //nolint:exhaustivestruct
 
 	http2Server := http2.Server{}
 	if err := http2.ConfigureServer(&httpServer, &http2Server); err != nil {
