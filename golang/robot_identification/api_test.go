@@ -2,17 +2,29 @@ package main_test
 
 import (
 	"fmt"
+	"runtime"
 	"sync"
 	"testing"
 	"time"
 
 	. "github.com/Nixolay/training/golang/robot_identification"
-	"github.com/pkg/profile"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func printStats(mem runtime.MemStats) {
+	runtime.ReadMemStats(&mem)
+
+	fmt.Println("mem.Alloc:", mem.Alloc)
+	fmt.Println("mem.TotalAlloc:", mem.TotalAlloc)
+	fmt.Println("mem.HeapAlloc:", mem.HeapAlloc)
+	fmt.Println("mem.NumGC:", mem.NumGC)
+
+	fmt.Println("----")
+}
+
 //nolint:wsl,scopelint
 func TestUserCount(t *testing.T) {
+	var mem runtime.MemStats
 	var data []struct {
 		name           string
 		timeout, sleep time.Duration
@@ -24,10 +36,11 @@ func TestUserCount(t *testing.T) {
 		count   int
 	}{
 		{name: "zero robots", timeout: time.Millisecond, sleep: time.Millisecond * 2},
-		{name: "ten robots", timeout: time.Second, sleep: time.Second * 10, count: 10},
+		{name: "ten robots", timeout: time.Second, sleep: time.Second / 10, count: 10},
 	}
 
-	defer profile.Start(profile.ProfilePath("/tmp/profile")).Stop()
+	// defer profile.Start(profile.ProfilePath("/tmp/profile")).Stop()
+	// defer profile.Start(profile.ProfilePath("/tmp/profile"), profile.TraceProfile).Stop()
 
 	for _, d := range data {
 		Convey(d.name, t, func() {
@@ -55,9 +68,11 @@ func TestUserCount(t *testing.T) {
 
 			wg.Wait()
 
-			time.Sleep(time.Millisecond * 2)
+			time.Sleep(d.sleep)
 
 			So(uStorage.CountRobots(), ShouldEqual, d.count)
+
+			printStats(mem)
 		})
 	}
 }
