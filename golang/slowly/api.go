@@ -21,16 +21,16 @@ type message struct {
 
 // RunServer starts the server.
 func RunServer(addr string) error {
-	return http.ListenAndServe(addr, GetHandlers())
+	return http.ListenAndServe(addr, GetHandlers(timeoutSeconds*time.Second))
 }
 
 // GetHandlers returns prepared handlers.
-func GetHandlers() http.Handler {
+func GetHandlers(timeout time.Duration) http.Handler {
 	r := http.NewServeMux()
 
 	slowHandler := http.HandlerFunc(slow)
 	timeoutHandler := http.TimeoutHandler(
-		slowHandler, timeoutSeconds*time.Second,
+		slowHandler, timeout,
 		"timeout too long",
 	)
 

@@ -15,7 +15,7 @@ import (
 
 // nolint:gosec,noctx
 func Test_slow(t *testing.T) {
-	srv := httptest.NewServer(GetHandlers())
+	srv := httptest.NewServer(GetHandlers(5 * time.Second))
 	defer srv.Close()
 
 	const contentType = "application/json"
@@ -57,7 +57,7 @@ func Test_slow(t *testing.T) {
 
 // nolint:gosec,noctx
 func TestTimouts_slow(t *testing.T) {
-	srv := httptest.NewServer(GetHandlers())
+	srv := httptest.NewServer(GetHandlers(time.Second / 2))
 	defer srv.Close()
 
 	const contentType = "application/json"
@@ -66,7 +66,7 @@ func TestTimouts_slow(t *testing.T) {
 
 	Convey("Test timeouts", t, func() {
 		Convey("Send timeout", func() {
-			buffer := bytes.NewBufferString(`{"timeout": 3000}`)
+			buffer := bytes.NewBufferString(`{"timeout": 300}`)
 			expected := `{"status":"ok"}`
 
 			res, err := http.Post(apiURL, contentType, buffer)
