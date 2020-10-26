@@ -8,6 +8,7 @@
 
 *.csv
 *.log
+*.out
 
 *.sql*
 
