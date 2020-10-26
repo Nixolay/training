@@ -35,7 +35,7 @@ func TestUserCount(t *testing.T) {
 		sleep   time.Duration
 		count   int
 	}{
-		{name: "zero robots", timeout: time.Millisecond, sleep: time.Millisecond * 2},
+		{name: "zero robots", timeout: 0, sleep: time.Millisecond},
 		{name: "ten robots", timeout: time.Second, sleep: time.Second / 10, count: 10},
 	}
 
