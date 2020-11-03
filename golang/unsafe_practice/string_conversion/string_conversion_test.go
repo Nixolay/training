@@ -3,7 +3,7 @@ package conversion_test
 import (
 	"testing"
 
-	. "github.com/Nixolay/training/golang/string_conversion"
+	. "github.com/Nixolay/training/golang/unsafe_practice/string_conversion"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

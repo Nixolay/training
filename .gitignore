@@ -9,6 +9,7 @@
 *.csv
 *.log
 *.out
+*.exe
 
 *.sql*
 
