@@ -3,7 +3,7 @@ package ex_test
 import (
 	"fmt"
 
-	. "github.com/Nixolay/training/golang/ExampleTest"
+	. "github.com/Nixolay/training/golang/example_test"
 )
 
 func ExampleDouble() {

@@ -6,7 +6,7 @@ install-pre-commit:
 
 .PHONY: windows
 windows:
-	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b %GOPATH%\bin
+	bash curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b %GOPATH%/bin
 
 .PHONY: linux
 linux:
