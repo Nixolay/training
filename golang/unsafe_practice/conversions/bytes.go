@@ -1,5 +1,5 @@
-// Package conversion example string conversion
-package conversion
+// Package conversions example string conversion
+package conversions
 
 import (
 	"reflect"
@@ -38,4 +38,37 @@ func UnsafeStringToByteSliceByHeader(s string) []byte {
 	bp.Cap = sp.Len
 
 	return b
+}
+
+// UnsafeUint64sToBytes conversation slice uint64 to bytes.
+// nolint:gosec
+func UnsafeUint64sToBytes(a []uint64) []byte {
+	var b []byte
+
+	ah := (*reflect.SliceHeader)(unsafe.Pointer(&a))
+	bh := (*reflect.SliceHeader)(unsafe.Pointer(&b))
+
+	bh.Data = ah.Data
+	bh.Len = ah.Len * int(unsafe.Sizeof(a[0]))
+	bh.Cap = bh.Len
+
+	return b
+}
+
+// SliceUint64ToBytes conversation slice uint64 to bytes.
+func SliceUint64ToBytes(sliceUint64 []uint64) []byte {
+	const (
+		x = 0xff
+		l = 8
+	)
+
+	r := make([]byte, 0, l*len(sliceUint64))
+
+	for _, item := range sliceUint64 {
+		for i := uint64(0); i < l; i++ {
+			r = append(r, byte((item>>(i*l))&x))
+		}
+	}
+
+	return r
 }

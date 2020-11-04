@@ -1,9 +1,9 @@
-package conversion_test
+package conversions_test
 
 import (
 	"testing"
 
-	. "github.com/Nixolay/training/golang/unsafe_practice/string_conversion"
+	. "github.com/Nixolay/training/golang/unsafe_practice/conversions"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -29,6 +29,14 @@ func TestStringConversion(t *testing.T) {
 		Convey("Test string conversion to byte slice by Header", func() {
 			actual := []byte(word)
 			expected := UnsafeStringToByteSliceByHeader(word)
+			So(expected, ShouldResemble, actual)
+		})
+
+		Convey("Test slice uint64 conversion to byte slice by Header", func() {
+			data := []uint64{1, 2, 3, 4, 5, 6, 7, 8, 9}
+			actual := SliceUint64ToBytes(data)
+
+			expected := UnsafeUint64sToBytes(data)
 			So(expected, ShouldResemble, actual)
 		})
 	})
@@ -85,4 +93,14 @@ func BenchmarkStringToByteSlice(b *testing.B) {
 	}
 
 	close(v)
+}
+
+func BenchmarkUnsafeUint64sToBytes(b *testing.B) {
+	data := []uint64{1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+	UnsafeUint64sToBytes(data)
+}
+
+func BenchmarkSliceUint64ToBytes(b *testing.B) {
+	data := []uint64{1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+	UnsafeUint64sToBytes(data)
 }
