@@ -16,6 +16,7 @@ import (
 // nolint:gosec,noctx
 func Test_slow(t *testing.T) {
 	srv := httptest.NewServer(GetHandlers(5 * time.Second))
+
 	defer srv.Close()
 
 	const contentType = "application/json"
