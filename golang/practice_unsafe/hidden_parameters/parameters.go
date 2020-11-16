@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"unsafe"
 
-	"github.com/Nixolay/training/golang/unsafe_practice/hidden_parameters/hidden"
+	"github.com/Nixolay/training/golang/practice_unsafe/hidden_parameters/hidden"
 )
 
 // GetHidden allows you to get a hidden field, but the order of

@@ -3,7 +3,7 @@ package sum_test
 import (
 	"testing"
 
-	. "github.com/Nixolay/training/golang/unsafe_practice/sum"
+	. "github.com/Nixolay/training/golang/practice_unsafe/sum"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

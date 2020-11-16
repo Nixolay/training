@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	. "github.com/Nixolay/training/golang/unsafe_practice/hidden_parameters"
-	"github.com/Nixolay/training/golang/unsafe_practice/hidden_parameters/hidden"
+	. "github.com/Nixolay/training/golang/practice_unsafe/hidden_parameters"
+	"github.com/Nixolay/training/golang/practice_unsafe/hidden_parameters/hidden"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
