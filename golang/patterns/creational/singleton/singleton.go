@@ -7,19 +7,23 @@ type single struct {
 
 var instance *single //nolint:gochecknoglobals
 
-// GetInstance returning instance single.
-//nolint:golint
-func GetInstance() *single {
-	if instance == nil {
-		instance = new(single)
-	}
-
-	return instance
-}
-
 // Increment count in singleton.
 func (s *single) Increment() int {
 	s.count++
 
 	return s.count
+}
+
+// Incrementer exported type.
+type Incrementer interface {
+	Increment() int
+}
+
+// GetInstance returning instance single.
+func GetInstance() Incrementer {
+	if instance == nil {
+		instance = new(single)
+	}
+
+	return instance
 }

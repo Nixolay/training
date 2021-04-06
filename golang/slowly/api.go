@@ -20,6 +20,7 @@ type message struct {
 }
 
 // RunServer starts the server.
+//nolint:wrapcheck
 func RunServer(addr string) error {
 	return http.ListenAndServe(addr, GetHandlers(timeoutSeconds*time.Second))
 }
@@ -40,6 +41,7 @@ func GetHandlers(timeout time.Duration) http.Handler {
 }
 
 // slow handle request.
+//nolint:durationcheck
 func slow(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if err := r.Body.Close(); err != nil {
@@ -65,7 +67,7 @@ func slow(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// reading message
-	msg := message{}
+	var msg message
 	if err := json.Unmarshal(content, &msg); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}

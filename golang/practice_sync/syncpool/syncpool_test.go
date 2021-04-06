@@ -6,6 +6,6 @@ import (
 	"github.com/Nixolay/training/golang/practice_sync/syncpool"
 )
 
-func TestPool(t *testing.T) {
+func BenchmarkPool(b *testing.B) {
 	syncpool.T()
 }

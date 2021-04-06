@@ -7,7 +7,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-//nolint:gomnd
 func TestThirt(t *testing.T) {
 	Convey("should handle basic cases", t, func() {
 		testequal(1234567, 87)

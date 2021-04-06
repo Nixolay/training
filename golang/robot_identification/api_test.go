@@ -25,11 +25,7 @@ func printStats(mem runtime.MemStats) {
 //nolint:wsl,scopelint
 func TestUserCount(t *testing.T) {
 	var mem runtime.MemStats
-	var data []struct {
-		name           string
-		timeout, sleep time.Duration
-		count          int
-	} = []struct {
+	data := []struct {
 		name    string
 		timeout time.Duration
 		sleep   time.Duration

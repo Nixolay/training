@@ -40,11 +40,13 @@ func TestFirstNonRepair(t *testing.T) {
 
 	for word, data := range rangeData {
 		println(word)
-		Equal(data, t)
+		Equal(t, data)
 	}
 }
 
-func Equal(data map[string]string, t *testing.T) {
+func Equal(t *testing.T, data map[string]string) {
+	t.Helper()
+
 	for word, expected := range map[string]string{"a": "a", "stress": "t", "moonmen": "e", "": ""} {
 		if actual := FirstNonRepeating(word); actual != expected {
 			t.Fatalf("Ожидалось что в слове '%s' найденный символ '%s' будет равен '%s'", word, actual, expected)

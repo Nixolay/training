@@ -60,14 +60,14 @@ func (stack *Stack) push(item rune) {
 }
 
 func (stack *Stack) pop() (rune, bool) {
-	if len(stack.buf) > zero {
-		out := stack.buf[len(stack.buf)-one]
-		stack.buf = stack.buf[:len(stack.buf)-one]
-
-		return out, true
+	if stack.empty() {
+		return zero, false
 	}
 
-	return zero, false
+	out := stack.buf[len(stack.buf)-one]
+	stack.buf = stack.buf[:len(stack.buf)-one]
+
+	return out, true
 }
 
 func (stack *Stack) empty() bool {
