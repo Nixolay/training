@@ -22,10 +22,15 @@ func (c *count32) get() int32 {
 	return atomic.LoadInt32((*int32)(c))
 }
 
-//nolint:golint,exhaustivestruct
+// User ...
+type User interface {
+	Inc(key string)
+	CountRobots() int32
+}
+
 // CreateUserStorage ...
-func CreateUserStorage(timeout time.Duration) users {
-	return users{m: make(map[string]*count32), timeout: timeout}
+func CreateUserStorage(timeout time.Duration) User {
+	return &users{m: make(map[string]*count32), timeout: timeout}
 }
 
 type users struct {

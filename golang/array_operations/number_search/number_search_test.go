@@ -1,4 +1,4 @@
-package number_search_test
+package numbersearch_test
 
 import (
 	"reflect"

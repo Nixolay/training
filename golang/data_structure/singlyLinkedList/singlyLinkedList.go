@@ -1,22 +1,23 @@
-package singlyLinkedList
+// Package singlylinkedlist пример односвязного списка.
+package singlylinkedlist
 
-// Node represents a node of linked list
+// Node represents a node of linked list.
 type Node struct {
 	value int
 	next  *Node
 }
 
-// LinkedList represents a linked list
+// LinkedList represents a linked list.
 type LinkedList struct {
 	head *Node
 	len  int
 }
 
-// GetSlice will return slice of values
-func (list LinkedList) GetSlice() []int {
-	s := make([]int, 0, list.len)
+// GetSlice will return slice of values.
+func (linkedList LinkedList) GetSlice() []int {
+	s := make([]int, 0, linkedList.len)
 
-	node := list.head
+	node := linkedList.head
 	for node != nil {
 		s = append(s, node.value)
 		node = node.next
@@ -25,43 +26,50 @@ func (list LinkedList) GetSlice() []int {
 	return s
 }
 
+// Len получить длину связного списка.
 func (linkedList LinkedList) Len() int {
 	return linkedList.len
 }
 
-func (list *LinkedList) Push(v int) {
-	if list.head == nil {
-		list.len++
-		list.head = &Node{value: v}
+// Push добавить элемент из связного списка.
+//nolint:wsl
+func (linkedList *LinkedList) Push(v int) {
+	if linkedList.head == nil {
+		linkedList.len++
+		linkedList.head = &Node{value: v}
+
 		return
 	}
 
-	list.len = 1
+	linkedList.len = 1
 
-	node := list.head
+	node := linkedList.head
 	for node.next != nil {
-		list.len++
+		linkedList.len++
 		node = node.next
 	}
 
-	list.len++
+	linkedList.len++
 	node.next = &Node{value: v}
 }
 
-func (list *LinkedList) Pop() int {
-	if list.head == nil {
+// Pop вытащить элемент из связного списка.
+//nolint:wsl
+func (linkedList *LinkedList) Pop() int {
+	if linkedList.head == nil {
 		return 0
 	}
 
-	defer func() { list.len-- }()
+	defer func() { linkedList.len-- }()
 
-	if list.head.next == nil {
-		v := list.head.value
-		list.head = nil
+	if linkedList.head.next == nil {
+		v := linkedList.head.value
+		linkedList.head = nil
+
 		return v
 	}
 
-	tail := list.head
+	tail := linkedList.head
 	var prevTail *Node
 
 	for tail.next != nil {
@@ -74,8 +82,9 @@ func (list *LinkedList) Pop() int {
 	return tail.value
 }
 
-func (list *LinkedList) Get(iter int) int {
-	node := list.head
+// Get получение элемента из связного списка.
+func (linkedList *LinkedList) Get(iter int) int {
+	node := linkedList.head
 	for i := 0; i < iter; i++ {
 		node = node.next
 	}
@@ -83,8 +92,9 @@ func (list *LinkedList) Get(iter int) int {
 	return node.value
 }
 
-func (list *LinkedList) Remove(iter int) {
-	node := list.head
+// Remove удаление элемента из связного списка.
+func (linkedList *LinkedList) Remove(iter int) {
+	node := linkedList.head
 	for i := 0; i < iter || node.next != nil; i++ {
 		node = node.next
 	}

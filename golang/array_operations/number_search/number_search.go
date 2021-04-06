@@ -1,5 +1,7 @@
-package number_search
+// Package numbersearch ...
+package numbersearch
 
+// FindSumTwoNumbers ...
 func FindSumTwoNumbers(arr []int, number int) []int {
 	vMap := make(map[int]struct{}, len(arr))
 	for _, v := range arr {
@@ -13,6 +15,7 @@ func FindSumTwoNumbers(arr []int, number int) []int {
 	return nil
 }
 
+// FindNumberInSortedArrays ...
 func FindNumberInSortedArrays(x, y, z []uint) int {
 	var nX, nY, nZ int
 

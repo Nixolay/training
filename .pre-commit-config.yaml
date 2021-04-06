@@ -1,28 +1,25 @@
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: HEAD
-  hooks:
-    - id: check-merge-conflict
-    - id: debug-statements
-    - id: no-commit-to-branch
-      args:
-        [
-          "--pattern",
-          "master",
-          "--pattern",
-          "release/.*",
-          "--pattern",
-          "develop/.*",
-        ]
-
-- repo: https://github.com/ambv/black
-  rev: HEAD
-  hooks:
-    - id: black
-#- repo: https://github.com/pre-commit/mirrors-pylint
-#  rev: HEAD
-#  hooks:
-#    - id: pylint
-# - repo: https://gitlab.com/pycqa/flake8
-#   rev: HEAD
-#   hooks:
-#     - id: flake8
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: HEAD
+    hooks:
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: no-commit-to-branch
+        args:
+          [
+            "--pattern",
+            "master",
+            "--pattern",
+            "release/.*",
+            "--pattern",
+            "develop/.*",
+          ]
+  - repo: git://github.com/golangci/golangci-lint
+    rev: HEAD
+    hooks:
+      - id: golangci-lint
+        name: golangci-lint
+        description: Fast linters runner for Go.
+        types: [go]
+        language: golang
+        pass_filenames: false

@@ -6,6 +6,7 @@ import (
 	"github.com/Nixolay/training/golang/data_structure/queue"
 )
 
+//nolint:paralleltest
 func TestQueue(t *testing.T) {
 	var q queue.Queue
 

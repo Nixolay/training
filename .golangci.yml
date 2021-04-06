@@ -1,0 +1,10 @@
+linters:
+  enable-all: true
+  disable:
+    - forbidigo
+    - paralleltest
+    - wastedassign
+    - exhaustivestruct
+
+issues:
+  exclude-use-default: false

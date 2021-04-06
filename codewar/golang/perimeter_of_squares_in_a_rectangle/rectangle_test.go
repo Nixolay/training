@@ -1,4 +1,4 @@
-//https://www.codewars.com/kata/559a28007caad2ac4e000083/train/go
+// https://www.codewars.com/kata/559a28007caad2ac4e000083/train/go
 package rectangle_test
 
 import (
@@ -8,7 +8,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-//nolint:gomnd
 func TestPerimeter(t *testing.T) {
 	Convey("Perimeter of squares in a rectangle", t, func() {
 		dotest(5, 80)

@@ -21,7 +21,7 @@ func Test_slow(t *testing.T) {
 
 	const contentType = "application/json"
 
-	var apiURL string = srv.URL + "/api/slow"
+	apiURL := srv.URL + "/api/slow"
 
 	Convey("Test API", t, func() {
 		Convey("Checking url availability", func() {
@@ -56,14 +56,14 @@ func Test_slow(t *testing.T) {
 	})
 }
 
-// nolint:gosec,noctx
+// nolint:gosec,noctx,paralleltest
 func TestTimouts_slow(t *testing.T) {
 	srv := httptest.NewServer(GetHandlers(time.Second / 2))
 	defer srv.Close()
 
 	const contentType = "application/json"
 
-	var apiURL string = srv.URL + "/api/slow"
+	apiURL := srv.URL + "/api/slow"
 
 	Convey("Test timeouts", t, func() {
 		Convey("Send timeout", func() {
