@@ -7,7 +7,11 @@ import (
 )
 
 func TestWhosePort(t *testing.T) {
-	const port = 8080
+	t.Skip("TestWhosePort skip in short mod")
 
-	whoseport.WhosePort(port)
+	const port = 3000
+
+	if process := whoseport.WhosePort(port); process == "" {
+		t.Fatal("process not find")
+	}
 }
