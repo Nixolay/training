@@ -4,12 +4,10 @@ import (
 	"testing"
 
 	. "github.com/Nixolay/training/codewar/golang/splitstrings"
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSolution(t *testing.T) {
-	Convey("should test that the solution returns the correct value", t, func() {
-		So(Solution("abc"), ShouldResemble, []string{"ab", "c_"})
-		So(Solution("abcdef"), ShouldResemble, []string{"ab", "cd", "ef"})
-	})
+	require.Equal(t, Solution("abc"), []string{"ab", "c_"})
+	require.Equal(t, Solution("abcdef"), []string{"ab", "cd", "ef"})
 }

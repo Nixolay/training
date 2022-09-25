@@ -22,14 +22,12 @@ func GetHidden(h *hidden.Hidden) string {
 	return hh.h
 }
 
+type bytesBuf struct {
+	buf []byte
+}
+
 // UnsafeGetBuf gets buffer from bytes.Buffer.
 //nolint:gosec
 func UnsafeGetBuf(bb *bytes.Buffer) []byte {
-	type bytesBuf struct {
-		buf []byte
-	}
-
-	b := (*bytesBuf)(unsafe.Pointer(bb))
-
-	return b.buf
+	return (*bytesBuf)(unsafe.Pointer(bb)).buf
 }

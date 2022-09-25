@@ -2,13 +2,14 @@
 package ipvalidator
 
 import (
+	"net"
 	"strconv"
 	"strings"
 )
 
 //nolint:gomnd
 // IsValidIP checked valid ip.
-func IsValidIP(ip string) bool {
+func IsValidIP2(ip string) bool {
 	numbers, four := strings.Split(ip, "."), 4
 	if len(numbers) < four {
 		return false
@@ -30,4 +31,8 @@ func IsValidIP(ip string) bool {
 	}
 
 	return true
+}
+
+func IsValidIP(ip string) bool {
+	return net.ParseIP(ip) != nil
 }

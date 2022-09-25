@@ -17,8 +17,7 @@ func Solution(str string) []string {
 		str += "_"
 	}
 
-	two := 2
-	out := make([]string, 0, len(str)/two)
+	out := make([]string, 0, len(str)/2)
 
 	for i := 0; i < len(str)/2+2; i += 2 {
 		out = append(out, str[i:i+2])
