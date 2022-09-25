@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	. "github.com/Nixolay/training/golang/selecting"
+	. "github.com/Nixolay/training/golang/go_by_tdd/runtimego/selecting"
 )
 
 func TestGoSelecting(t *testing.T) {
@@ -23,6 +23,8 @@ func TestGoSelecting(t *testing.T) {
 					panic(fmt.Sprintf("Item: %d, selection is bad!", item))
 				}
 			}
+
+			fmt.Println(data)
 		}()
 	}
 

@@ -7,6 +7,7 @@ import (
 	. "github.com/Nixolay/training/golang/practice_unsafe/hidden_parameters"
 	"github.com/Nixolay/training/golang/practice_unsafe/hidden_parameters/hidden"
 	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGetHidden(t *testing.T) {
@@ -23,7 +24,14 @@ func TestGetHidden(t *testing.T) {
 			bb := bytes.NewBufferString(data)
 
 			buf := UnsafeGetBuf(bb)
+			require.Equal(t, string(data), data)
 			So(string(buf), ShouldEqual, data)
 		})
 	})
+}
+
+func TestUnsafeGetBuf(t *testing.T) {
+	data := "test data"
+	bb := bytes.NewBufferString(data)
+	require.Equal(t, string(UnsafeGetBuf(bb)), data)
 }

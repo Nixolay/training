@@ -4,19 +4,15 @@ import (
 	"testing"
 
 	. "github.com/Nixolay/training/codewar/golang/camelcase"
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/require"
 )
 
 func TestToCamelCase(t *testing.T) {
-	Convey("should handle basic cases", t, func() {
-		dotest("", "")
-		dotest("The_Stealth_Warrior", "TheStealthWarrior")
-		dotest("the-Stealth-Warrior", "theStealthWarrior")
+	t.Run("should handle basic cases", func(t *testing.T) {
+		require.Equal(t, ToCamelCase(""), "")
+		require.Equal(t, ToCamelCase("The_Stealth_Warrior"), "TheStealthWarrior")
+		require.Equal(t, ToCamelCase("The_Stealth_Warrior"), "TheStealthWarrior")
+		require.Equal(t, ToCamelCase("the-stealth-Warrior"), "theStealthWarrior")
+		require.Equal(t, ToCamelCase("the stealth warrior"), "theStealthWarrior")
 	})
-}
-
-func dotest(str, exp string) {
-	println("input:", str)
-
-	So(ToCamelCase(str), ShouldEqual, exp)
 }

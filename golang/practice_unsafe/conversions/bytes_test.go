@@ -9,7 +9,7 @@ import (
 
 const (
 	word = "test data is my big text"
-	size = 1000
+	size = 100000
 )
 
 func TestStringConversion(t *testing.T) {
@@ -56,43 +56,39 @@ func BenchmarkUnsafeBytesToString(b *testing.B) {
 func BenchmarkUnsafeBytesToStringByHeader(b *testing.B) {
 	data := []byte(word)
 	v := make(chan string, size)
+	defer close(v)
 
 	for i := 0; i < size; i++ {
 		v <- UnsafeBytesToStringByHeader(data)
 	}
-
-	close(v)
 }
 
 func BenchmarkBytesToString(b *testing.B) {
 	data := []byte(word)
 	v := make(chan string, size)
+	defer close(v)
 
 	for i := 0; i < size; i++ {
 		v <- string(data)
 	}
-
-	close(v)
 }
 
 func BenchmarkUnsafeStringToByteSliceByHeader(b *testing.B) {
 	v := make(chan []byte, size)
+	defer close(v)
 
 	for i := 0; i < size; i++ {
 		v <- UnsafeStringToByteSliceByHeader(word)
 	}
-
-	close(v)
 }
 
 func BenchmarkStringToByteSlice(b *testing.B) {
 	v := make(chan []byte, size)
+	defer close(v)
 
 	for i := 0; i < size; i++ {
 		v <- []byte(word)
 	}
-
-	close(v)
 }
 
 func BenchmarkUnsafeUint64sToBytes(b *testing.B) {
