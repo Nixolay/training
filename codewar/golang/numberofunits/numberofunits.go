@@ -10,19 +10,16 @@ func LongestSequenceOfUnits(arr []int64) int {
 		count := 0
 
 		for _, e := range strconv.FormatInt(n, 2) {
-			print(string(e))
 			if e == '1' {
 				count++
 			}
 		}
-		println()
 
 		if count > max {
 			max = count
 			item = i
 		}
 	}
-	println("-----------------")
 
 	return item
 }
