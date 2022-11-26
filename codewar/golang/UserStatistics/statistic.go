@@ -11,7 +11,6 @@ package userstatistics
 type UserStatistics struct{}
 
 func NewUserStatistics(k int, limit int) *UserStatistics {
-	list[:1]
 	return nil
 }
 
