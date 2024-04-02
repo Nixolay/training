@@ -3,8 +3,8 @@ package stack_test
 import (
 	"testing"
 
-	. "github.com/Nixolay/training/golang/data_structure/stack"
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/Nixolay/training/golang/data_structure/stack"
+	"github.com/stretchr/testify/require"
 )
 
 type Data struct {
@@ -30,12 +30,11 @@ func TestBracketsIscorrectly(t *testing.T) {
 		{brackets: "{{{**[][][]", ok: false, position: 3},
 	}
 
-	//nolint:scopelint
 	for _, data := range rangeData {
-		Convey(data.brackets, t, func() {
-			position, ok := BracketsIscorrectly(data.brackets)
-			So(position, ShouldEqual, data.position)
-			So(ok, ShouldEqual, data.ok)
+		t.Run(data.brackets, func(t *testing.T) {
+			position, ok := stack.BracketsIscorrectly(data.brackets)
+			require.Equal(t, position, data.position)
+			require.Equal(t, ok, data.ok)
 		})
 	}
 }
