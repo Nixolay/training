@@ -27,10 +27,13 @@ import (
 )
 
 func TestLongestSubstring(t *testing.T) {
+	t.Parallel()
+
 	type testData struct {
 		s        string
 		expected int
 	}
+
 	data := []testData{
 		{"abcabcbb", 3},
 		{"bbbbb", 1},
@@ -38,6 +41,7 @@ func TestLongestSubstring(t *testing.T) {
 		{" ", 1},
 		{"dvdf", 3},
 	}
+
 	for _, v := range data {
 		require.Equal(t, v.expected, LongestSubstring(v.s), v.s)
 	}
