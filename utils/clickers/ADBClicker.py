@@ -23,7 +23,8 @@ for line in subprocess.check_output(["adb", "devices"]).decode().split('\n'):
 
 print(f"addrs: {ip_addresses}")
 if len(ip_addresses) == 0:
-   addr = '127.0.0.1:62001'
+   addr = '127.0.0.1:5555'
+   subprocess.call(["adb", "connect", addr])
    w, h = getScreenSize(addr)
    ip_addresses[addr] = [int(w/2), int(h/2)]
 
