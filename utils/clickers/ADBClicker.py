@@ -3,8 +3,7 @@ import subprocess, re
 from random import randint
 from time import sleep
 
-output = subprocess.check_output(["adb", "devices"])
-
+# Извлекаем разрешение экрана
 def getScreenSize(addr):
    output = subprocess.check_output(['adb', "-s", addr, 'shell', 'wm', 'size'], text=True)
    print(f"Screen: {output}")
@@ -14,15 +13,15 @@ def getScreenSize(addr):
    else:
       return 1080, 1920
 
-# Извлечь IP-адреса из строк вывода
+# Извлечь IP-адреса из строк вывода и получить точку середины экрана
 ip_addresses = {}
-for line in output.decode().split('\n'):
+for line in subprocess.check_output(["adb", "devices"]).decode().split('\n'):
    if 'device' in line and not 'List of devices attached' in line:
       addr = line.split()[0]
       w, h = getScreenSize(addr)
       ip_addresses[addr] = [int(w/2), int(h/2)]
 
-print(ip_addresses)
+print(f"addrs: {ip_addresses}")
 if len(ip_addresses) == 0:
    addr = '127.0.0.1:62001'
    w, h = getScreenSize(addr)
