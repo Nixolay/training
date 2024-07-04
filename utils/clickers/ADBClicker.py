@@ -15,14 +15,11 @@ print(ip_addresses)
 if len(ip_addresses) == 0:
    ip_addresses.append('127.0.0.1:62001')
 
-subprocess.run(['adb', 'connect', ip_addresses[0]])
 def send():
     for addr in ip_addresses:
-        # subprocess.run(['adb', 'connect', addr],stdout=subprocess.DEVNULL)
         x = randint(310, 723)
         y = randint(912, 1290)
-        subprocess.call(["adb", "shell", "input", "tap", str(x), str(y)], stdout=subprocess.DEVNULL)
-        # send_command(command.format(x=x, y=y))
+        subprocess.call(["adb", "-s", addr, "shell", "input", "tap", str(x), str(y)], stdout=subprocess.DEVNULL)
 
 while True:
     for _ in range(randint(200, 320)):
