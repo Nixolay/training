@@ -19,19 +19,6 @@ def getScreenSize(addr):
    else:
       return Resolution(1080/2, 1920/2)
 
-# Извлечь IP-адреса из строк вывода и получить точку середины экрана
-ip_addresses = {}
-for line in subprocess.check_output(["adb", "devices"]).decode().split('\n'):
-   if 'device' in line and not 'List of devices attached' in line:
-      addr = line.split()[0]
-      ip_addresses[addr] = getScreenSize(addr)
-
-print(f"addrs: {ip_addresses}")
-if len(ip_addresses) == 0:
-   addr = '127.0.0.1:5555'
-   subprocess.call(["adb", "connect", addr])
-   ip_addresses[addr] = getScreenSize(addr)
-
 def isIP(addr):
    try:
       ipaddress.ip_address(addr)
@@ -39,11 +26,23 @@ def isIP(addr):
    except:
       return False
 
+ip_addresses = {}
+def addAddr(addr: str):
+   if isIP(addr):
+      subprocess.call(["adb", "connect", addr])
+   ip_addresses[addr] = getScreenSize(addr)
+
+# Извлечь IP-адреса из строк вывода и получить точку середины экрана
+for line in subprocess.check_output(["adb", "devices"]).decode().split('\n'):
+   if 'device' in line and not 'List of devices attached' in line:
+      addAddr(line.split()[0])
+
+print(f"addrs: {ip_addresses}")
+if len(ip_addresses) == 0:
+   addAddr('127.0.0.1:5555')
+
 def send():
    for addr, sc in ip_addresses.items():
-      # print(f"{addr} {sc}")
-      if isIP(addr):
-         subprocess.call(["adb", "connect", addr], stdout=subprocess.DEVNULL)
       x = randint((sc.w-200), (sc.w+200))
       y = randint(sc.h, (sc.h+300))
       subprocess.call(["adb", "-s", addr, "shell", "input" , "tap", str(x), str(y)], stdout=subprocess.DEVNULL)
