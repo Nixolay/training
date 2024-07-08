@@ -4,10 +4,14 @@ from random import randint
 from time import sleep
 
 class Resolution:
-   def __init__(self, w: int, h: int) -> None:
+   def __init__(self, w = 1080/2, h = 1920/2) -> None:
       self.w, self.h = int(w), int(h)
    def __str__(self) -> str:
-      return f"w: {self.w} h:{self.h}"
+      return f"(w={self.w}, h={self.h})"
+   def __format__(self, format_spec: str) -> str:
+      return self.__str__()
+   def __repr__(self) -> str:
+      return self.__str__()
 
 # Извлекаем разрешение экрана
 def getScreenSize(addr):
@@ -17,28 +21,31 @@ def getScreenSize(addr):
    if match:
       return Resolution(int(match.group(1))/2, int(match.group(2))/2)
    else:
-      return Resolution(1080/2, 1920/2)
+      return Resolution()
 
 def isIP(addr):
    try:
       ipaddress.ip_address(addr)
-      return True
+      subprocess.call(["adb", "connect", addr])
    except:
-      return False
+      return
 
 ip_addresses = {}
 def addAddr(addr: str):
-   if isIP(addr):
-      subprocess.call(["adb", "connect", addr])
-   ip_addresses[addr] = getScreenSize(addr)
+   isIP(addr)
+   try:
+      ip_addresses[addr] = getScreenSize(addr)
+   except:
+      ip_addresses[addr] = Resolution()
 
 # Извлечь IP-адреса из строк вывода и получить точку середины экрана
 for line in subprocess.check_output(["adb", "devices"]).decode().split('\n'):
-   if 'device' in line and not 'List of devices attached' in line:
+   if "device" in line.split():
+      print(f"LINE: {line}")
       addAddr(line.split()[0])
 
-print(f"addrs: {ip_addresses}")
 if len(ip_addresses) == 0:
+   print("ip_addresses is empty")
    addAddr('127.0.0.1:5555')
 
 def send():
@@ -47,8 +54,9 @@ def send():
       y = randint(sc.h, (sc.h+300))
       subprocess.call(["adb", "-s", addr, "shell", "input" , "tap", str(x), str(y)], stdout=subprocess.DEVNULL)
 
+print(f"ADDR: {ip_addresses}")
 while True:
-    for _ in range(randint(200, 320)):
-        send()
-        sleep(randint(2500, 3000)/1000)
-    sleep(randint(20, 40))
+   for _ in range(randint(200, 320)):
+      send()
+      sleep(randint(2500, 3000)/1000)
+   sleep(randint(20, 40))
