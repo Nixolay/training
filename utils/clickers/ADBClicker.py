@@ -3,6 +3,8 @@ import subprocess, re, ipaddress
 from random import randint
 from time import sleep
 
+subprocess.run("adb kill-server && adb start-server", shell=True, check=True)
+
 class Resolution:
    def __init__(self, w = 1080/2, h = 1920/2) -> None:
       self.w, self.h = int(w), int(h)
@@ -59,4 +61,7 @@ while True:
    for _ in range(randint(200, 320)):
       send()
       sleep(randint(2500, 3000)/1000)
+   subprocess.run("adb kill-server && adb start-server", shell=True, check=True, stdout=subprocess.DEVNULL)
+   for addr in ip_addresses.keys():
+      isIP(addr)
    sleep(randint(20, 40))
