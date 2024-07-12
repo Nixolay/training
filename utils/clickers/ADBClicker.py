@@ -1,5 +1,5 @@
 #  adb connect 127.0.0.1:62001
-import subprocess, re, ipaddress
+import subprocess, re, ipaddress, platform, datetime
 from random import randint
 from time import sleep
 
@@ -56,12 +56,38 @@ def send():
       y = randint(sc.h, (sc.h+300))
       subprocess.call(["adb", "-s", addr, "shell", "input" , "tap", str(x), str(y)], stdout=subprocess.DEVNULL)
 
+def is_telegram_on_screen():
+   try:
+      # Определяем команду в зависимости от операционной системы
+      if platform.system() == "Windows":
+         command = ['adb', 'shell', 'dumpsys', 'window', '|', 'findstr', 'mCurrentFocus']
+      else:
+         command = ['adb', 'shell', 'dumpsys', 'window', '|', 'grep', 'mCurrentFocus']
+      # Выполнение команды
+      result = subprocess.check_output(' '.join(command), shell=True, stderr=subprocess.STDOUT)
+      result = result.decode('utf-8')
+      # Проверка на наличие Telegram
+      if 'org.telegram.messenger' in result:
+         return True
+      else:
+         return False
+   except subprocess.CalledProcessError as e:
+      print("Ошибка выполнения команды adb:", e.output.decode('utf-8'))
+      return False
+
 print(f"ADDR: {ip_addresses}")
+count = 0
 while True:
    for _ in range(randint(200, 320)):
       send()
+      while not is_telegram_on_screen():
+         now = datetime.datetime.now()
+         print(f"Telegram is not on screen: {now.strftime('%H:%M:%S')}")
+         exit(1)
       sleep(randint(2500, 3000)/1000)
    subprocess.run("adb kill-server && adb start-server", shell=True, check=True, stdout=subprocess.DEVNULL)
    for addr in ip_addresses.keys():
       isIP(addr)
+   count += 1
+   print(f"\nCOUNT: {count}")
    sleep(randint(20, 40))
