@@ -29,8 +29,7 @@ def getScreenSize(addr):
     match = re.search(r"(\d+)\s*x\s*(\d+)", output)
     if match:
         return Resolution(int(match.group(1)) / 2, int(match.group(2)) / 2)
-    else:
-        return Resolution()
+    return Resolution()
 
 
 def isIP(addr):
