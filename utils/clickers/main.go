@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"fmt"
+	log "log/slog"
 	"math/rand"
 	"net"
+	"os"
 	"os/exec"
 	"os/signal"
 	"regexp"
@@ -20,8 +23,11 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer func() { cancel() }()
 	adb := ADB{cancel: cancel}
+	if err := adb.InitLogger(); err != nil {
+		panic(err)
+	}
 	adb.Run(ctx)
-	fmt.Println("EXIT:", time.Now().String())
+	log.Info("EXIT", "time", time.Now().String())
 }
 
 var (
@@ -78,11 +84,11 @@ func (ADB) Restart() error {
 func (adb ADB) Send() {
 	for addr, sc := range adb.data {
 		if !adb.TelegramOnScreen(addr) {
-			fmt.Printf("Telegram на экране устройства %s, не запущен\n", addr)
+			log.Error("Telegram на экране устройства, не запущен", "addr", addr)
 			adb.cancel()
-
 			return
 		}
+
 		x := rand.Intn(401) + (sc.w - 200)
 		y := rand.Intn(301) + sc.h
 
@@ -90,11 +96,22 @@ func (adb ADB) Send() {
 		cmd.Stdout = nil // Отключение вывода на консоль
 
 		if err := cmd.Run(); err != nil {
-			fmt.Printf("Ошибка выполнения команды adb для адреса %s: %v\n", addr, err)
+			log.Error("Ошибка выполнения команды adb для адреса "+addr, "err", err)
 			adb.cancel()
 			return
 		}
 	}
+}
+
+func (adb *ADB) InitLogger() error {
+	file, err := os.OpenFile("log.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
+	if err != nil {
+		return err
+	}
+
+	log.SetDefault(log.New(log.NewJSONHandler(file, nil)))
+
+	return nil
 }
 
 func (adb *ADB) InitDevices() {
@@ -105,12 +122,12 @@ func (adb *ADB) InitDevices() {
 
 	output, err := cmd.Output()
 	if err != nil {
-		fmt.Printf("Ошибка выполнения команды adb: %v\n", err)
+		log.Error("Ошибка выполнения команды adb", "err", err)
 	}
 
-	fmt.Printf("Devices: %s\n", output)
+	log.Info("Devices: " + string(output))
 
-	for _, line := range strings.Split(string(output), "\n") {
+	for _, line := range append(strings.Split(string(output), "\n"), readAddresses("devices.txt")...) {
 		if strings.Contains(line, "\tdevice") {
 			adb.Add(strings.Split(line, "\t")[0])
 		}
@@ -125,13 +142,13 @@ func (adb *ADB) Run(ctx context.Context) {
 	adb.InitDevices()
 
 	if len(adb.data) == 0 {
-		fmt.Println("No devices found")
+		log.Error("No devices found")
 		return
 	}
 
 	for {
 		count++
-		println("COUNT:", count)
+		log.Info("STEP", "count", count)
 		adb.Restart()
 
 		// цикл с рандомным количеством повторений от 200 до 300 повторений
@@ -157,7 +174,7 @@ func (ADB) TelegramOnScreen(addr string) bool {
 
 	// Выполнение команды
 	output, _ := exec.Command(command[0], command[1:]...).CombinedOutput()
-	// fmt.Println("OUTPUT:", string(output))
+	// log.Info("OUTPUT: " +string(output))
 
 	// Проверка на то что Telegram на экране
 	return strings.Contains(string(output), "org.telegram.messenger")
@@ -185,7 +202,33 @@ func NewScreenSize(addr string) (res Resolution) {
 	height, _ := strconv.Atoi(matches[2])
 
 	res.Set(height, width)
-	fmt.Printf("Screen: %sw:%d h:%d res:%s\n", output, width, height, res)
+	log.Info("Screen", "output", output, "w", width, "h", height, "res", res)
 
 	return
+}
+
+func readAddresses(filename string) []string {
+	var addrs []string
+
+	// Открываем файл
+	file, err := os.Open(filename)
+	if err != nil {
+		log.Error("не удалось открыть файл", "err", err)
+		return nil
+	}
+	defer file.Close()
+
+	// Используем bufio.Scanner для построчного чтения файла
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		addrs = append(addrs, scanner.Text())
+	}
+
+	// Проверяем на ошибки, которые могут произойти во время сканирования
+	if err := scanner.Err(); err != nil {
+		log.Error("ошибка при чтении файла", "err", err)
+		return nil
+	}
+
+	return addrs
 }
