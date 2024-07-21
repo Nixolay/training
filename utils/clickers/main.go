@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"fmt"
 	log "log/slog"
@@ -18,23 +19,27 @@ import (
 	"time"
 )
 
-func main() {
-	// получаем сигнал системы о закрытии программы ctrl + c
-	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-	defer func() { cancel() }()
-	adb := ADB{cancel: cancel}
-	if err := adb.InitLogger(); err != nil {
-		panic(err)
-	}
-	adb.Run(ctx)
-	log.Info("EXIT", "time", time.Now().String())
-}
+const deviceTemplate = "\tdevice"
 
 var (
 	cmdStart = exec.Command("adb", "start-server")
 	cmdKill  = exec.Command("adb", "kill-server")
 	rgxRes   = regexp.MustCompile(`(\d+)\s*x\s*(\d+)`)
 )
+
+func main() {
+	// получаем сигнал системы о закрытии программы ctrl + c
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer func() { cancel() }()
+
+	adb := ADB{cancel: cancel}
+	if err := adb.InitLogger(); err != nil {
+		panic(err)
+	}
+
+	adb.Run(ctx)
+	log.Info("EXIT")
+}
 
 type Resolution struct {
 	w, h int
@@ -61,12 +66,14 @@ type ADB struct {
 }
 
 // Add добавляет устройство в список устройств
-func (adb *ADB) Add(addr string) {
-	if isIP(addr) {
-		exec.Command("adb", "connect", addr).Run()
+func (adb *ADB) Add(deviceID string) {
+	if isIP(deviceID) {
+		exec.Command("adb", "connect", deviceID).Run()
 	}
 
-	adb.data[addr] = NewScreenSize(addr)
+	if isDeviceAvailable(deviceID) {
+		adb.data[deviceID] = NewScreenSize(deviceID)
+	}
 }
 
 // Restart перезапускает сервер adb
@@ -82,9 +89,9 @@ func (ADB) Restart() error {
 
 // Send кликает по экрану, для каждого устройства
 func (adb ADB) Send() {
-	for addr, sc := range adb.data {
-		if !adb.TelegramOnScreen(addr) {
-			log.Error("Telegram на экране устройства, не запущен", "addr", addr)
+	for deviceID, sc := range adb.data {
+		if !adb.TelegramOnScreen(deviceID) {
+			log.Error("Telegram на экране устройства, не запущен", "addr", deviceID)
 			adb.cancel()
 			return
 		}
@@ -92,11 +99,11 @@ func (adb ADB) Send() {
 		x := rand.Intn(401) + (sc.w - 200)
 		y := rand.Intn(301) + sc.h
 
-		cmd := exec.Command("adb", "-s", addr, "shell", "input", "tap", strconv.Itoa(x), strconv.Itoa(y))
+		cmd := exec.Command("adb", "-s", deviceID, "shell", "input", "tap", strconv.Itoa(x), strconv.Itoa(y))
 		cmd.Stdout = nil // Отключение вывода на консоль
 
 		if err := cmd.Run(); err != nil {
-			log.Error("Ошибка выполнения команды adb для адреса "+addr, "err", err)
+			log.Error("Ошибка выполнения команды adb для адреса "+deviceID, "err", err)
 			adb.cancel()
 			return
 		}
@@ -128,7 +135,7 @@ func (adb *ADB) InitDevices() {
 	log.Info("Devices: " + string(output))
 
 	for _, line := range append(strings.Split(string(output), "\n"), readAddresses("devices.txt")...) {
-		if strings.Contains(line, "\tdevice") {
+		if strings.Contains(line, deviceTemplate) {
 			adb.Add(strings.Split(line, "\t")[0])
 		}
 	}
@@ -142,7 +149,7 @@ func (adb *ADB) Run(ctx context.Context) {
 	adb.InitDevices()
 
 	if len(adb.data) == 0 {
-		log.Error("No devices found")
+		log.Error("Устройства не обнаружены")
 		return
 	}
 
@@ -165,11 +172,11 @@ func (adb *ADB) Run(ctx context.Context) {
 }
 
 // isTelegramOnScreen проверяет, отображается ли приложение Telegram на экране устройства
-func (ADB) TelegramOnScreen(addr string) bool {
+func (ADB) TelegramOnScreen(deviceID string) bool {
 	// Определяем команду в зависимости от операционной системы
-	command := []string{"sh", "-c", fmt.Sprintf("adb -s %s shell dumpsys window | grep mCurrentFocus", addr)}
+	command := []string{"sh", "-c", fmt.Sprintf("adb -s %s shell dumpsys window | grep mCurrentFocus", deviceID)}
 	if runtime.GOOS == "windows" {
-		command = []string{"cmd", "/C", fmt.Sprintf("adb -s %s shell dumpsys window | findstr mCurrentFocus", addr)}
+		command = []string{"cmd", "/C", fmt.Sprintf("adb -s %s shell dumpsys window | findstr mCurrentFocus", deviceID)}
 	}
 
 	// Выполнение команды
@@ -184,10 +191,10 @@ func isIP(addr string) bool {
 	return net.ParseIP(addr) != nil
 }
 
-func NewScreenSize(addr string) (res Resolution) {
+func NewScreenSize(deviceID string) (res Resolution) {
 	res.Set(1920, 1080)
 	// Выполнение команды adb
-	output, err := exec.Command("adb", "-s", addr, "shell", "wm", "size").Output()
+	output, err := exec.Command("adb", "-s", deviceID, "shell", "wm", "size").Output()
 	if err != nil {
 		return
 	}
@@ -202,7 +209,7 @@ func NewScreenSize(addr string) (res Resolution) {
 	height, _ := strconv.Atoi(matches[2])
 
 	res.Set(height, width)
-	log.Info("Screen", "output", output, "w", width, "h", height, "res", res)
+	log.Info("Screen", "output", string(output), "w", width, "h", height, "res", res)
 
 	return
 }
@@ -221,7 +228,7 @@ func readAddresses(filename string) []string {
 	// Используем bufio.Scanner для построчного чтения файла
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		addrs = append(addrs, scanner.Text())
+		addrs = append(addrs, scanner.Text()+deviceTemplate)
 	}
 
 	// Проверяем на ошибки, которые могут произойти во время сканирования
@@ -231,4 +238,19 @@ func readAddresses(filename string) []string {
 	}
 
 	return addrs
+}
+
+func isDeviceAvailable(deviceID string) bool {
+	var out bytes.Buffer
+
+	cmd := exec.Command("adb", "-s", deviceID, "shell", "echo", "hello")
+	cmd.Stdout = &out
+
+	err := cmd.Run()
+	if err != nil {
+		log.Error("ошибка выполнения команды adb", "err", err)
+		return false
+	}
+
+	return strings.Contains(out.String(), "hello")
 }
