@@ -139,6 +139,8 @@ func (adb *ADB) InitDevices() {
 			adb.Add(strings.Split(line, "\t")[0])
 		}
 	}
+
+	log.Info("Devices result: " + fmt.Sprint(adb.data))
 }
 
 // Run запускает кликер в бесконечном цикле
