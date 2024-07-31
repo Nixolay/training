@@ -56,11 +56,6 @@ func TestAddTwoNumbers(t *testing.T) {
 	}
 }
 
-type ListNode struct {
-	Val  int ``
-	Next *ListNode
-}
-
 // ListNode определяет структуру узла односвязного списка.
 type ListNode struct {
 	Val  int
