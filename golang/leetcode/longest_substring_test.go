@@ -39,7 +39,7 @@ func TestLongestSubstring(t *testing.T) {
 		{"bbbbb", 1},
 		{"pwwkew", 3},
 		{" ", 1},
-		{"dvdf", 2},
+		{"dvdf", 3},
 	}
 
 	for _, v := range data {
@@ -48,29 +48,23 @@ func TestLongestSubstring(t *testing.T) {
 }
 
 func LongestSubstring(str string) int {
+	lastSeen := make(map[rune]int)
 	start, max := 0, 0
 
 	for end, symbol := range str {
-		if start == end {
-			continue
+		// Если символ уже встречался и его последний индекс >= начала текущего окна
+		if index, found := lastSeen[symbol]; found && index >= start {
+			// Обновляем начало окна, чтобы избежать повторяющегося символа
+			start = index + 1
 		}
 
-		for _, s := range str[start:end] {
-			if s != symbol {
-				continue
-			}
+		// Обновляем или добавляем текущий символ в словарь с его индексом
+		lastSeen[symbol] = end
 
-			if len(str[start:end]) > max {
-				max = len(str[start:end])
-			}
-
-			start = end
-			break
+		// Вычисляем текущую длину уникальной подстроки и обновляем max
+		if (end - start + 1) > max {
+			max = end - start + 1
 		}
-	}
-
-	if len(str[start:]) > max {
-		max = len(str[start:])
 	}
 
 	return max
