@@ -36,6 +36,7 @@ func TestLongestSubstring(t *testing.T) {
 
 	data := []testData{
 		{"abcabcbb", 3},
+		{"abacbcbb", 3},
 		{"bbbbb", 1},
 		{"pwwkew", 3},
 		{" ", 1},
@@ -48,7 +49,7 @@ func TestLongestSubstring(t *testing.T) {
 }
 
 func LongestSubstring(str string) int {
-	lastSeen := make(map[rune]int)
+	lastSeen := make(map[rune]int) // алгоритм скользящего окна с помощью карты
 	start, max := 0, 0
 
 	for end, symbol := range str {
