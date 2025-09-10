@@ -10,38 +10,118 @@ import (
 )
 
 func main() {
-	if err := StartServerProducts(); err != nil {
+	if err := StartServerCustomers(); err != nil {
 		panic(err)
 	}
 }
 
-// curl http://127.0.0.1:8080/shop/10/products
-// curl -X POST -H "Content-Type: application/json" -d "{\"item\":\"pen\"}" http://127.0.0.1:8080/orders
 // Требования:
-//   - GET /shops/{id}/products -> список
-//   - POST /shops/{id}/products {"name":"pen"} -> 201 Created, Location
-//   - GET /shops/{id}/products/{pid} -> 200 или 404
-//   - /shopProducts?shop=1 -> 404
-func StartServerProducts() error {
-	mu := http.NewServeMux()
-
-	mu.HandleFunc("GET /ping", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/plain")
-		fmt.Fprint(w, "pong")
-	})
-
-	mu.HandleFunc("GET /shop/{id}/products/", func(w http.ResponseWriter, r *http.Request) {
-		id := r.PathValue("id")
-		if id == "" {
-			http.Error(w, "ID is required", http.StatusBadRequest)
+//   - GET /customers/{uuid} -> 200 или 404
+//   - UUID формат: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+//   - /customers/42 или /customers/alex -> 404
+func StartServerCustomers() error {
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /customers/{uuid}", func(w http.ResponseWriter, r *http.Request) {
+		if len(strings.Split(r.PathValue("uuid"), "-")) < 5 {
+			w.WriteHeader(http.StatusNotFound)
 			return
 		}
+
+		var data struct{}
+
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, "Products for shop ID: %s", id)
+		json.NewEncoder(w).Encode(map[string]interface{}{"data": data})
 	})
 
-	fmt.Println("Server starting on :8080")
-	return http.ListenAndServe(":8080", mu)
+	return http.ListenAndServe(":8080", mux)
+}
+
+// Требования:
+//   - GET /invoices?limit=2&offset=1&status=paid&sort=-created_at
+//     -> 200 {"meta":{...},"data":[...]}
+//   - Любые глагольные пути (/invoices/list) -> 404
+func StartServerInvoices() error {
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("GET /invoices", func(w http.ResponseWriter, r *http.Request) {
+		var limit, offset, total int
+
+		fmt.Sscan(r.URL.Query().Get("limit"), &limit)
+		fmt.Sscan(r.URL.Query().Get("offset"), &offset)
+		fmt.Sscan(r.URL.Query().Get("total"), &total)
+
+		sort := r.URL.Query().Get("sort")
+
+		data := map[string]interface{}{
+			"meta": map[string]interface{}{"limit": limit, "offset": offset, "total": total, "sort": sort},
+			"data": []int{},
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(data)
+	})
+
+	return http.ListenAndServe(":8080", mux)
+}
+
+// curl http://127.0.0.1:8080/shop/10/products
+// curl -X POST -H "Content-Type: application/json" -d "{\"item\":\"pen\"}" http://127.0.0.1:8080/shops/{id}/products
+// Требования:
+//   - GET  /shops/{id}/products -> список
+//   - POST /shops/{id}/products {"name":"pen"} -> 201 Created, Location
+//   - GET  /shops/{id}/products/{pid} -> 200 или 404
+//   - /shopProducts?shop=1 -> 404
+func StartServerProducts() error {
+	mux := http.NewServeMux()
+
+	type Product struct {
+		ID    int    `json:"id"`
+		Title string `json:"title"`
+	}
+
+	type Request struct {
+		Name string `json:"name"`
+	}
+
+	type Response struct {
+		Data interface{} `json:"data"`
+	}
+
+	products := map[string][]Product{}
+
+	mux.HandleFunc("GET /shops/{id}/products", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(Response{append([]Product{}, products[r.PathValue("id")]...)})
+	})
+
+	mux.HandleFunc("GET /shops/{id}/products/{pid}", func(w http.ResponseWriter, r *http.Request) {
+		id := r.PathValue("id")
+		pid := 0
+		fmt.Sscan(r.PathValue("pid"), &pid)
+
+		if pid < 1 || len(products[id]) < pid {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(Response{products[id][pid-1]})
+	})
+
+	mux.HandleFunc("POST /shops/{id}/products", func(w http.ResponseWriter, r *http.Request) {
+		req := Request{}
+		json.NewDecoder(r.Body).Decode(&req)
+
+		products[r.PathValue("id")] = append(products[r.PathValue("id")], Product{
+			ID:    len(products[r.PathValue("id")]) + 1,
+			Title: req.Name,
+		})
+
+		w.Header().Set("Location", fmt.Sprintf("/shops/%s/products/%d", r.PathValue("id"), len(products[r.PathValue("id")])))
+		w.WriteHeader(http.StatusCreated)
+	})
+
+	return http.ListenAndServe(":8080", mux)
 }
 
 // Требования:
