@@ -17,7 +17,7 @@ func TestMain2(t *testing.T) {
 	fmt.Println("✅ 5.  Longest Palindrome:", longestPalindrome("babad"))                                                 // "bab" или "aba"
 	fmt.Println("✅ 6.  Container With Most Water:", maxArea([]int{1, 8, 6, 2, 5, 4, 8, 3, 7}))                           // 49
 	fmt.Println("✅ 7.  Revers Linked List:",
-		nodeStringify(ReverseLinkedList(&ListNode{Val: 1, Next: &ListNode{Val: 2, Next: &ListNode{Val: 3}}}))) // 321
+		nodeStringify(reverseLinkedList(&ListNode{Val: 1, Next: &ListNode{Val: 2, Next: &ListNode{Val: 3}}}))) // 321
 	fmt.Println("✅ 8.  Valid Parentheses:", isValidParentheses("()[]{}"))                                                         // true
 	fmt.Println("✅ 9.  String Compression:", StringCompression([]byte("aaabb")))                                                  // a3b2
 	fmt.Println("✅ 10. Maximum Subarray:", maxSubArray([]int{-2, 1, -3, 4, -1, 2, 1, -5, 4}))                                     // 6
@@ -203,7 +203,7 @@ func maxArea(height []int) (res int) {
 // ⏰ O(n).
 // 💾 O(1).
 // 🔑 Идея: итеративно переставляем ссылки.
-func ReverseLinkedList(head *ListNode) (out *ListNode) {
+func reverseLinkedList(head *ListNode) (out *ListNode) {
 	for head != nil {
 		tmp := head.Next
 		head.Next = out

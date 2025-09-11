@@ -18,7 +18,7 @@ func TestMaxAreaMain2(t *testing.T) {
 
 	for _, td := range data {
 		if t.Run("📌: "+strconv.Itoa(td.expect), func(t *testing.T) {
-			result := MaxAreaMain2(td.data)
+			result := MaxArea(td.data)
 			require.Equal(t, td.expect, result, "🚫: "+strconv.Itoa(result))
 		}) {
 			t.Log("✅: " + strconv.Itoa(td.expect))
@@ -29,6 +29,19 @@ func TestMaxAreaMain2(t *testing.T) {
 // MaxAreaMain2
 // 📝 Найти 2 линии, образующие контейнер с максимальной водой.
 // 🔑 Идея: двигать меньшую высоту.
-func MaxAreaMain2(height []int) (res int) {
+func MaxArea(height []int) (res int) {
+	l, r := 0, len(height)-1
+
+	for l < r {
+		h := min(height[l], height[r])
+		res = max(res, h*(r-l))
+
+		if height[l] > height[r] {
+			r--
+		} else {
+			l++
+		}
+	}
+
 	return
 }

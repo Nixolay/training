@@ -16,6 +16,83 @@ func main() {
 }
 
 // Требования:
+//   - GET /tickets/{id} -> 200 {"data":{...},"meta":{...}} или 404 {"error":{...},"meta":{...}}
+//   - POST /tickets {"subject":"..."} -> 201 Created, Location, data
+//   - POST с битым JSON -> 400 {"error":{...}}
+//   - В ответе либо data, либо error + meta
+//
+// POST /tickets:
+// при валидном JSON { "subject": "..." } → 201 Created, Location: /tickets/{id}, тело с data.
+// при невалидном JSON → 400 Bad Request, тело с error.code=400 и человекочитаемым message.
+// В одном ответе либо data, либо error. meta опционально (например, request_id, timestamp).
+// Content-Type: application/json везде, где есть тело.
+//
+// Чек-лист тестов
+// GET  /tickets/abc → 200 и data.
+// GET  /tickets/missing → 404 и error.code=404.
+// POST /tickets c валидным телом → 201, Location, data.
+// POST /tickets c битым JSON → 400, тело error.
+func StartServerTickets() error {
+	mu := http.NewServeMux()
+
+	type Data struct {
+		ID      string `json:"id"`
+		Subject string `json:"subject"`
+	}
+
+	type Error struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+	}
+
+	type Response struct {
+		Error Error  `json:"error,omitempty"`
+		Data  Data   `json:"data,omitempty"`
+		Meta  string `json:"meta,omitempty"`
+	}
+
+	match := make(map[string]Data)
+	var idCounter int64
+
+	mu.HandleFunc("GET /tickets/{id}", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		data, ok := match[r.PathValue("id")]
+		if ok {
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(Response{Data: data, Meta: "success"})
+			return
+		}
+
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(Response{Error: Error{Code: http.StatusNotFound, Message: "ticket not found"}, Meta: "not found"})
+	})
+
+	mu.HandleFunc("POST /tickets", func(w http.ResponseWriter, r *http.Request) {
+		data := new(Data)
+		err := json.NewDecoder(r.Body).Decode(data)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(Response{Error: Error{Code: http.StatusBadRequest, Message: "invalid JSON"}, Meta: "bad json"})
+			return
+		}
+
+		// Генерируем новый ID
+		idCounter++
+		newID := fmt.Sprintf("%d", idCounter)
+		data.ID = newID
+
+		match[newID] = *data
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Location", "/tickets/"+newID)
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(Response{Data: *data, Meta: "created"})
+	})
+
+	return http.ListenAndServe(":8080", mu)
+}
+
+// Требования:
 //   - GET /customers/{uuid} -> 200 или 404
 //   - UUID формат: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 //   - /customers/42 или /customers/alex -> 404
