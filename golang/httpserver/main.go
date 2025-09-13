@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -10,9 +11,56 @@ import (
 )
 
 func main() {
-	if err := StartServerCustomers(); err != nil {
+	if err := StartServerUser(); err != nil {
 		panic(err)
 	}
+}
+
+func StartServerBook() error {
+	type Book struct {
+		Id    int    `json:"id"`
+		Title string `json:"title"`
+	}
+
+	mu := http.NewServeMux()
+	mu.HandleFunc("GET /compare", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"json_example": Book{1, "Book"},
+			"xml_example":  "<Item><Id>1</Id><Title>Book</Title></Item>",
+		})
+	})
+
+	return http.ListenAndServe(":8080", mu)
+}
+
+// Реализуйте ТОЛЬКО эту функцию
+func StartServerUser() error {
+	type User struct {
+		Name string `json:"name"`
+		Age  int    `json:"age"`
+	}
+
+	mu := http.NewServeMux()
+	mu.HandleFunc("GET /user", func(w http.ResponseWriter, r *http.Request) {
+		user := User{
+			Name: "Alice",
+			Age:  30,
+		}
+
+		switch r.URL.Query().Get("format") {
+		case "json":
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(user)
+		case "xml":
+			w.Header().Set("Content-Type", "application/xml")
+			xml.NewEncoder(w).Encode(user)
+		default:
+			w.WriteHeader(http.StatusBadRequest)
+		}
+	})
+
+	return http.ListenAndServe(":8080", mu)
 }
 
 // Требования:

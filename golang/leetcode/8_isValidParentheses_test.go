@@ -21,7 +21,7 @@ func TestIsPalindrome(t *testing.T) {
 
 	for _, td := range data {
 		if t.Run(fmt.Sprintf("📌: %v %s", td.expect, td.data), func(t *testing.T) {
-			result := IsValidParenthesesMain2(td.data)
+			result := IsValidParentheses(td.data)
 			require.Equalf(t, td.expect, result, "🚫: %v, %s", td.expect, td.data)
 		}) {
 			t.Logf("✅: %v", td.expect)
@@ -29,6 +29,27 @@ func TestIsPalindrome(t *testing.T) {
 	}
 }
 
-func IsValidParenthesesMain2(str string) bool {
-	return true
+func IsValidParentheses(str string) bool {
+	match := map[rune]rune{
+		'}': '{',
+		']': '[',
+		')': '(',
+	}
+
+	stack := make([]rune, 0, len(str))
+
+	for _, rn := range str {
+		switch rn {
+		case ']', '}', ')':
+			if len(stack) == 0 || match[rn] != stack[len(stack)-1] {
+				return false
+			}
+
+			stack = stack[:len(stack)-1]
+		default:
+			stack = append(stack, rn)
+		}
+	}
+
+	return len(stack) == 0
 }
