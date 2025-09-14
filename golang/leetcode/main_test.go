@@ -252,25 +252,27 @@ func isValidParentheses(str string) bool {
 // ⏰ O(n).
 // 💾 O(1).
 // 🔑 Идея: два указателя — один читает, другой пишет.
-func StringCompression(chars []byte) int {
-	write, read := 0, 0
-	for read < len(chars) {
-		ch := chars[read]
-		count := 0
-		for read < len(chars) && chars[read] == ch {
-			read++
-			count++
+func StringCompression(chars []byte) (pos int) {
+	left := 0
+
+	for right := 0; right <= len(chars); right++ {
+		if right < len(chars) && chars[left] == chars[right] {
+			continue
 		}
-		chars[write] = ch
-		write++
-		if count > 1 {
-			for _, c := range []byte(strconv.Itoa(count)) {
-				chars[write] = c
-				write++
-			}
+
+		chars[pos] = chars[left]
+		pos++
+
+		if right-left > 1 {
+			num := []byte(strconv.Itoa(right - left))
+			copy(chars[pos:], num)
+			pos += len(num)
 		}
+
+		left = right
 	}
-	return write
+
+	return
 }
 
 // ---------------------- 10. Maximum Subarray (Максимальная сумма подмассива) ----------------------
