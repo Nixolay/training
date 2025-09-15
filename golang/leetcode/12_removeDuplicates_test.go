@@ -29,6 +29,12 @@ func TestRemoveDuplicates(t *testing.T) {
 	}
 }
 
-func RemoveDuplicates(nums []int) (i int) {
-	return i + 1
+func RemoveDuplicates(nums []int) (pos int) {
+	for _, num := range nums {
+		if nums[pos] != num {
+			pos++
+			nums[pos] = num
+		}
+	}
+	return pos + 1
 }

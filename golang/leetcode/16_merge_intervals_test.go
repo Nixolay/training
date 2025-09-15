@@ -27,6 +27,7 @@ func TestMergeIntervals(t *testing.T) {
 	}
 }
 
+// 📝 Слить пересекающиеся интервалы в один, не пересекающие оставить
 func MergeIntervals(intervals [][]int) (arr [][]int) {
 	return
 }

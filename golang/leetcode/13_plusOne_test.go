@@ -28,5 +28,16 @@ func TestPlusOne(t *testing.T) {
 }
 
 func PlusOne(nums []int) []int {
+	carr := 1
+	for right := len(nums) - 1; right >= 0; right-- {
+		carr += nums[right]
+		nums[right] = carr % 10
+		carr /= 10
+	}
+
+	if carr > 0 {
+		nums = append([]int{carr}, nums...)
+	}
+
 	return nums
 }

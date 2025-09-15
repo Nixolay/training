@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"mime"
 	"net/http"
 	"strconv"
 	"strings"
@@ -11,9 +12,118 @@ import (
 )
 
 func main() {
-	if err := StartServerUser(); err != nil {
+	if err := StartServerApiRegister(); err != nil {
 		panic(err)
 	}
+}
+
+// Реализуйте ТОЛЬКО эту функцию.
+// Требования (POST /api/v2/register):
+//   - Принимает ИЛИ {"name":"Alice Smith"} ИЛИ {"first_name":"Alice","last_name":"Smith"}
+//   - Ответ 201, Content-Type: application/json, {"data":{"first_name":"Alice","last_name":"Smith"}}
+//   - Если пришла старая форма (name), добавьте заголовок Deprecation: true
+//   - Битый JSON -> 400
+func StartServerApiRegister() error {
+	mu := http.NewServeMux()
+
+	type User struct {
+		Name      string `json:"name,omitempty"`
+		FirstName string `json:"first_name,omitempty"`
+		LastName  string `json:"last_name,omitempty"`
+	}
+
+	mu.HandleFunc("POST /api/v2/register", func(w http.ResponseWriter, r *http.Request) {
+		user := User{}
+		err := json.NewDecoder(r.Body).Decode(&user)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		if user.Name != "" {
+			user.Name = ""
+			user.FirstName = "Alice"
+			user.LastName = "Smith"
+			w.Header().Set("Deprecation", "true")
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(map[string]User{"data": user})
+	})
+
+	return (&http.Server{Addr: ":8080", Handler: mu}).ListenAndServe()
+}
+
+// Реализуйте ТОЛЬКО эту функцию.
+// Требования:
+//   - GET /api/user + Accept: application/vnd.example.user+json;v=1 -> {"name":"Alice Smith"}
+//   - GET /api/user + Accept: application/vnd.example.user+json;v=2 -> {"first_name":"Alice","last_name":"Smith"}
+//   - Иначе -> 406 Not Acceptable
+//   - На успехах: Vary: Accept, Content-Type: application/json
+func StartServerApiUser() error {
+	mu := http.NewServeMux()
+
+	type User struct {
+		Name      string `json:"name,omitempty"`
+		FirstName string `json:"first_name,omitempty"`
+		LastName  string `json:"last_name,omitempty"`
+	}
+
+	mu.HandleFunc("", func(w http.ResponseWriter, r *http.Request) {
+		user := User{}
+		_, params, _ := mime.ParseMediaType(r.Header.Get("Accept"))
+		switch params["v"] {
+		case "1":
+			user.Name = "Alice Smith"
+		case "2":
+			user.FirstName = "Alice"
+			user.LastName = "Smith"
+		default:
+			w.WriteHeader(http.StatusNotAcceptable)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(user)
+	})
+
+	srv := http.Server{Addr: ":8080", Handler: mu}
+	return srv.ListenAndServe()
+}
+
+// Реализуйте ТОЛЬКО эту функцию.
+// Требования:
+//   - GET /api/v1/user -> {"name":"Alice Smith"}
+//   - GET /api/v2/user -> {"first_name":"Alice","last_name":"Smith"}
+//   - Везде Content-Type: application/json
+func StartServerV1User() error {
+	mu := http.NewServeMux()
+
+	type User struct {
+		Name      string `json:"name,omitempty"`
+		FirstName string `json:"first_name,omitempty"`
+		LastName  string `json:"last_name,omitempty"`
+	}
+
+	mu.HandleFunc("GET /api/{version}/user", func(w http.ResponseWriter, r *http.Request) {
+		user := User{}
+		switch r.PathValue("version") {
+		case "v1":
+			user.Name = "Alice Smith"
+		case "v2":
+			user.FirstName = "Alice"
+			user.LastName = "Smith"
+		default:
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(user)
+	})
+
+	return http.ListenAndServe(":8080", mu)
 }
 
 func StartServerBook() error {
