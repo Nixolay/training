@@ -18,6 +18,45 @@ func main() {
 }
 
 // Реализуйте ТОЛЬКО эту функцию.
+// Требования:
+//   - GET /api/user?version=1 -> {"name":"Alice Smith"}
+//   - GET /api/user?version=2 -> {"first_name":"Alice","last_name":"Smith"}
+//   - Если version пустой — можно вернуть v1
+//   - Если version=0 (снятая версия) -> 410 Gone
+//   - Везде Content-Type: application/json (кроме 410 — тело можно не отдавать)
+func StartServerParamVersion() error {
+	mu := http.NewServeMux()
+
+	type User struct {
+		Name      string `json:"name,omitempty"`
+		FirstName string `json:"first_name,omitempty"`
+		LastName  string `json:"last_name,omitempty"`
+	}
+
+	mu.HandleFunc("GET /api/user", func(w http.ResponseWriter, r *http.Request) {
+		user := new(User)
+		switch r.URL.Query().Get("version") {
+		case "0":
+			w.WriteHeader(http.StatusGone)
+			return
+		case "1":
+			user.Name = "Alice Smith"
+		case "2":
+			user.FirstName = "Alice"
+			user.LastName = "Smith"
+		default:
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		w.Header().Add("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(user)
+	})
+
+	return (&http.Server{Addr: ":8080", Handler: mu}).ListenAndServe()
+}
+
+// Реализуйте ТОЛЬКО эту функцию.
 // Требования (POST /api/v2/register):
 //   - Принимает ИЛИ {"name":"Alice Smith"} ИЛИ {"first_name":"Alice","last_name":"Smith"}
 //   - Ответ 201, Content-Type: application/json, {"data":{"first_name":"Alice","last_name":"Smith"}}
