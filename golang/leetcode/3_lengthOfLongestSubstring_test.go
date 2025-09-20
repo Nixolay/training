@@ -28,15 +28,15 @@ func TestLengthOfLongestSubstring(t *testing.T) {
 // 📝 Найти длину подстроки без повторяющихся символов.
 func LengthOfLongestSubstringMain2(str string) (maxLen int) {
 	match := map[rune]int{}
-	left := 0
+	lft := 0
 
-	for right, ch := range str {
-		if idx, ok := match[ch]; ok {
-			left = max(left, idx+1)
+	for rgt, rn := range str {
+		if idx, ok := match[rn]; ok {
+			lft = max(lft, idx+1)
 		}
 
-		match[ch] = right
-		maxLen = max(maxLen, right-left+1)
+		match[rn] = rgt
+		maxLen = max(maxLen, rgt-lft+1)
 	}
 
 	return

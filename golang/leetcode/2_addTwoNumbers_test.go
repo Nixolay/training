@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestAddTwoNumbersMain2(t *testing.T) {
+func TestAddTwoNumbers(t *testing.T) {
 	data := []struct {
 		data   [2]*ListNode
 		expect *ListNode
@@ -17,7 +17,7 @@ func TestAddTwoNumbersMain2(t *testing.T) {
 
 	for _, td := range data {
 		if t.Run("📌:"+td.expect.string(), func(t *testing.T) {
-			result := AddTwoNumbersMain2(td.data[0], td.data[1])
+			result := AddTwoNumbers(td.data[0], td.data[1])
 			require.Equal(t, td.expect.toSlice(), result.toSlice(), "🚫: "+result.string())
 		}) {
 			t.Log("✅:" + td.expect.string())
@@ -26,23 +26,23 @@ func TestAddTwoNumbersMain2(t *testing.T) {
 }
 
 // 📝 Даны 2 числа в виде связанных списков, вернуть сумму как список.
-func AddTwoNumbersMain2(l1, l2 *ListNode) *ListNode {
-	head := &ListNode{} // фиктивная голова
-	carry := 0          // перенос при сложении
+func AddTwoNumbers(l1, l2 *ListNode) (head *ListNode) {
+	head = new(ListNode)
+	carr := 0
 
-	for curr := head; l1 != nil || l2 != nil || carry > 0; curr = curr.Next {
+	for curr := head; l1 != nil || l2 != nil || carr > 0; curr = curr.Next {
 		if l1 != nil {
-			carry += l1.Val
+			carr += l1.Val
 			l1 = l1.Next
 		}
 
 		if l2 != nil {
-			carry += l2.Val
+			carr += l2.Val
 			l2 = l2.Next
 		}
 
-		curr.Next = &ListNode{Val: carry % 10}
-		carry /= 10
+		curr.Next = &ListNode{Val: carr % 10}
+		carr /= 10
 	}
 
 	return head.Next

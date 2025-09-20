@@ -34,7 +34,7 @@ func TwoSum(nums []int, target int) []int {
 	match := map[int]int{}
 
 	for idx, num := range nums {
-		if i, ok := match[abs(target-num)]; ok {
+		if i, ok := match[target-num]; ok {
 			return []int{i, idx}
 		}
 
